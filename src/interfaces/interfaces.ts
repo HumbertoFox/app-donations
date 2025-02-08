@@ -1,29 +1,40 @@
-import { ReactNode } from 'react';
+import {
+    ButtonHTMLAttributes,
+    ReactNode,
+    SetStateAction
+} from 'react';
 
-export interface SubmitButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    children: ReactNode;  // Tipando a prop 'children'
-    disabled?: boolean;  // Definindo 'disabled' como opcional
-    className?: string;   // Definindo 'className' como opcional
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+    children: ReactNode;
+    disabled?: boolean;
+    className?: string;
 };
 
-export interface TypeButtonProps extends SubmitButtonProps {
-    type?: 'button' | 'submit' | 'reset';  // Tipando corretamente o 'type'
+export interface TypeButtonProps extends ButtonProps {
+    type?: 'button' | 'submit' | 'reset';
 };
 
 export interface IconsProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    icon: string | any; // O nome da classe de ícones para um Font Awesome ou qualquer biblioteca de ícones (por exemplo, 'fa-solid fa-eye')
-    className?: string; // Nome de classe opcional para adicionar estilo personalizado
-    title?: string; // Torna title opcional
+    icon: string | any;
+    className?: string;
+    title?: string;
 };
 
-export interface SessionPayload {
-    username: string;
-    email?: string;
-    user_id?: string;
-    [key: string]: unknown; // Caso precise de flexibilidade para adicionar mais propriedades no futuro
+interface FormData {
+    street: string;
+    district: string;
+    city: string;
 };
 
-export interface UsernameProps {
-    user: string | null;
+interface Errors {
+    zipcode?: string | null;
+};
+
+export interface CheckedZipCodeProps {
+    element: React.ChangeEvent<HTMLInputElement>;
+    setFormData: React.Dispatch<SetStateAction<FormData>>;
+    errors: Errors;
+    zipCodeRef: React.RefObject<HTMLInputElement>;
+    numberResidenceRef: React.RefObject<HTMLInputElement>;
 };

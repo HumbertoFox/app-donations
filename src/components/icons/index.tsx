@@ -9,7 +9,7 @@ library.add(fas, far, fab);
 
 export default function Icons({
     icon,
-    className = '',
+    className,
     ...props
 }: IconsProps) {
     return <FontAwesomeIcon
@@ -18,4 +18,4 @@ export default function Icons({
         aria-hidden={!props.title}
         {...props}
     />;
-};
+}

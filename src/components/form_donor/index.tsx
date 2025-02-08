@@ -51,7 +51,7 @@ export default function DonorFormComponent() {
                                 value={formData.donorcode}
                                 onChange={handleChange}
                                 required
-                                disabled
+                                readOnly
                             />
                         </div>
 

@@ -1,5 +1,7 @@
 'use server';
 
-export default function donorUpdateAction() {
+const donorUpdateAction = () => {
 
 }
+
+export default donorUpdateAction;

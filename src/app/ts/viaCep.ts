@@ -1,25 +1,34 @@
+import { CheckedZipCodeProps } from '@/interfaces/interfaces';
 import axios from 'axios';
 
 const viaCepApi = axios.create({
     baseURL: 'https://viacep.com.br/ws/'
 });
 
-export const checkedZipCode = async (element, setData, errors, zipCodeRef, numberResidenceRef) => {
+export const checkedZipCode = async ({
+    element,
+    setFormData,
+    errors,
+    zipCodeRef,
+    numberResidenceRef
+}: CheckedZipCodeProps) => {
     const clearZipCode = () => {
-        setData(prevData => ({
+        setFormData(prevData => ({
             ...prevData,
             street: '',
             district: '',
             city: '',
         }));
-        zipCodeRef.current.focus();
+        if (zipCodeRef.current) zipCodeRef.current.focus();
     };
-    
+
     const zipcode = element.target.value.replace(/\D/g, '');
     const validazipcode = /^[0-9]{8}$/;
+
     if (!zipcode) {
         clearZipCode();
         errors.zipcode = 'Formato de CEP inválido!';
+        return;
     };
 
     try {
@@ -27,13 +36,13 @@ export const checkedZipCode = async (element, setData, errors, zipCodeRef, numbe
             const { data } = await viaCepApi.get(`${zipcode}/json/`);
 
             if (data && !data.erro) {
-                setData(prevData => ({
+                setFormData(prevData => ({
                     ...prevData,
                     street: data.logradouro,
                     district: data.bairro,
                     city: data.localidade,
                 }));
-                numberResidenceRef.current.focus();
+                if (numberResidenceRef.current) numberResidenceRef.current.focus();
                 errors.zipcode = null;
             } else {
                 clearZipCode();
