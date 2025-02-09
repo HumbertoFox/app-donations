@@ -31,7 +31,7 @@ export default function DonationFormComponent() {
     const createInputsFields = (count: number, startIndex: number) => (
         Array.from({ length: count }, (_, index) => (
             <div
-                className='w-full flex gap-[5px] max-md:flex-col'
+                className='w-full flex flex-wrap max-sm:flex-col gap-[5px]'
                 key={index}
             >
                 <div className='flex flex-col'>
@@ -39,7 +39,7 @@ export default function DonationFormComponent() {
                         {`Objeto ${startIndex + index}`}
                     </label>
                     <input
-                        className='border border-blue-300 rounded p-0.5'
+                        className='w-[280px] max-sm:w-full border border-blue-300 rounded p-0.5'
                         id={`object${startIndex + index}`}
                         name={`object${startIndex + index}`}
                         type='text'
@@ -92,13 +92,13 @@ export default function DonationFormComponent() {
         };
     };
     return (
-        <form className='max-w-[750px] p-1 text-sm max-xl:w-[380px] max-md:w-[280px] duration-[400ms]'>
-            <fieldset className='flex flex-col gap-[5px] duration-[400ms]'>
+        <form className='max-w-full flex flex-col p-1 text-sm duration-[400ms]'>
+            <fieldset className='max-w-full flex flex-col gap-[5px] duration-[400ms]'>
                 <legend className='mx-auto py-1 duration-[400ms] drop-shadow-[1px_1px_0.5px_#AAF998]'>Informações da Doação</legend>
 
                 <div className='flex'>
                     <div className='flex flex-wrap gap-[5px] p-1 border-2 rounded'>
-                        <div className='w-[150px] max-md:w-full flex flex-col'>
+                        <div className='w-[150px] max-sm:w-full flex flex-col'>
                             <label htmlFor='donorcode'>
                                 Código do Doador
                             </label>
@@ -114,7 +114,7 @@ export default function DonationFormComponent() {
                             />
                         </div>
 
-                        <div className='w-[150px] max-md:w-full flex flex-col'>
+                        <div className='w-[150px] max-sm:w-full flex flex-col'>
                             <label htmlFor='donationcode'>
                                 Código da Doação
                             </label>
@@ -132,34 +132,36 @@ export default function DonationFormComponent() {
                     </div>
                 </div>
 
-                <div className='flex gap-[5px] duration-[400ms] max-xl:flex-wrap p-1 border-2 rounded'>
-                    <div className='w-full flex flex-col gap-[5px] duration-[400ms]'>
-                        {createInputsFields(Math.ceil(itemCount / 2), 1)}
+                <div className='max-w-full flex flex-col gap-[5px] p-1 border-2 rounded duration-[400ms]'>
+                    <div className='max-w-full flex max-[966px]:flex-col flex-wrap gap-[5px]'>
+                        <div className='max-w-full flex flex-col gap-[5px] duration-[400ms]'>
+                            {createInputsFields(Math.ceil(itemCount / 2), 1)}
+                        </div>
+                        <div className='max-w-full flex flex-col gap-[5px] duration-[400ms]'>
+                            {createInputsFields(Math.floor(itemCount / 2), Math.ceil(itemCount / 2) + 1)}
+                        </div>
                     </div>
-                    <div className='w-full flex flex-col gap-[5px] duration-[400ms]'>
-                        {createInputsFields(Math.floor(itemCount / 2), Math.ceil(itemCount / 2) + 1)}
+
+                    <div className='flex flex-wrap gap-2 justify-evenly mt-2'>
+                        {itemCount < 20 && (
+                            <ButtonComponent
+                                type='button'
+                                onClick={addItem}
+                            >
+                                Adicionar Item
+                            </ButtonComponent>
+                        )}
+
+                        {itemCount > 1 && (
+                            <ButtonComponent
+                                className='bg-red-600 hover:bg-red-500 focus:bg-red-500 active:bg-red-700'
+                                type='button'
+                                onClick={removeItem}
+                            >
+                                Remover Último Item
+                            </ButtonComponent>
+                        )}
                     </div>
-                </div>
-
-                <div className='flex justify-evenly mt-2'>
-                    {itemCount < 20 && (
-                        <ButtonComponent
-                            type='button'
-                            onClick={addItem}
-                        >
-                            Adicionar Item
-                        </ButtonComponent>
-                    )}
-
-                    {itemCount > 1 && (
-                        <ButtonComponent
-                            className='bg-red-600 hover:bg-red-500 focus:bg-red-500 active:bg-red-700'
-                            type='button'
-                            onClick={removeItem}
-                        >
-                            Remover Último Item
-                        </ButtonComponent>
-                    )}
                 </div>
             </fieldset>
         </form>

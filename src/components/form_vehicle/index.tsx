@@ -20,8 +20,8 @@ export default function VehicleFormComponent() {
         });
     };
     return (
-        <form className='flex flex-col gap-4 text-sm p-1'>
-            <div>
+        <form className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm p-1'>
+            <div className='flex flex-col'>
                 <label htmlFor='model'>Modelo</label>
                 <input
                     className='w-full uppercase border border-blue-300 rounded p-0.5'
@@ -33,7 +33,7 @@ export default function VehicleFormComponent() {
                 />
             </div>
 
-            <div>
+            <div className='flex flex-col'>
                 <label htmlFor='automaker'>Montadora</label>
                 <input
                     className='w-full uppercase border border-blue-300 rounded p-0.5'
@@ -45,7 +45,7 @@ export default function VehicleFormComponent() {
                 />
             </div>
 
-            <div>
+            <div className='flex flex-col'>
                 <label htmlFor='renavam'>Renavam</label>
                 <input
                     className='w-full border border-blue-300 rounded p-0.5'
@@ -57,7 +57,7 @@ export default function VehicleFormComponent() {
                 />
             </div>
 
-            <div>
+            <div className='flex flex-col'>
                 <label htmlFor='plate'>Placa</label>
                 <input
                     className='w-full uppercase border border-blue-300 rounded p-0.5'
@@ -69,7 +69,7 @@ export default function VehicleFormComponent() {
                 />
             </div>
 
-            <div>
+            <div className='flex flex-col'>
                 <label htmlFor='km'>Km</label>
                 <input
                     className='w-full border border-blue-300 rounded p-0.5'

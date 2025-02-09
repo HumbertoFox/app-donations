@@ -9,8 +9,8 @@ const linksItems = [
     { title: 'Veículos Cadastrados', icon: 'fa-solid fa-truck', route: '/vehicles', hover: 'hover:text-[orange]' },
     { title: 'Cadastrar Motorista', icon: 'fa-solid fa-address-card', route: '/drivers/registerdriver', hover: 'hover:text-[blue]' },
     { title: 'Motoristas Cadastrados', icon: 'fa-regular fa-address-card', route: '/drivers', hover: 'hover:text-[orange]' },
-    { title: 'Cadastrar Ajudante', icon: 'fa-solid fa-id-card', route: '', hover: 'hover:text-[blue]' },
-    { title: 'Ajudantes Cadastrados', icon: 'fa-regular fa-id-card', route: '', hover: 'hover:text-[orange]' }
+    { title: 'Cadastrar Ajudante', icon: 'fa-solid fa-id-card', route: '/helpers/registerhelper', hover: 'hover:text-[blue]' },
+    { title: 'Ajudantes Cadastrados', icon: 'fa-regular fa-id-card', route: '/helpers', hover: 'hover:text-[orange]' }
 ];
 
 export default function MenuComponent() {

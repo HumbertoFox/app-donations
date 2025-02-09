@@ -39,7 +39,7 @@ export default function DonorFormComponent() {
                 </legend>
                 <div className='w-[280px]'>
                     <div className='p-1 border-2 rounded'>
-                        <div className='flex flex-col gap-1'>
+                        <div className='flex flex-col'>
                             <label htmlFor='donorcode'>
                                 Código do Doador
                             </label>
@@ -55,7 +55,7 @@ export default function DonorFormComponent() {
                             />
                         </div>
 
-                        <div className='flex flex-col gap-1'>
+                        <div className='flex flex-col'>
                             <label htmlFor='name'>
                                 Nome do Doador
                             </label>
@@ -70,7 +70,7 @@ export default function DonorFormComponent() {
                             />
                         </div>
 
-                        <div className='flex flex-col gap-1'>
+                        <div className='flex flex-col'>
                             <label htmlFor='phone'>
                                 Contato do Responsável
                             </label>
@@ -86,7 +86,7 @@ export default function DonorFormComponent() {
                             />
                         </div>
 
-                        <div className='flex flex-col gap-1'>
+                        <div className='flex flex-col'>
                             <label htmlFor='contact'>
                                 Contato/Ramal
                             </label>
@@ -101,7 +101,7 @@ export default function DonorFormComponent() {
                             />
                         </div>
 
-                        <div className='flex flex-col gap-1'>
+                        <div className='flex flex-col'>
                             <label htmlFor='contact_other'>
                                 Contato do Responsável
                             </label>
@@ -119,7 +119,7 @@ export default function DonorFormComponent() {
 
                 <div className='w-[280px]'>
                     <div className='flex gap-5 justify-center p-1 border-2 rounded'>
-                        <div className='flex flex-col gap-1'>
+                        <div className='flex flex-col'>
                             <input
                                 className='cursor-pointer'
                                 id='house'
@@ -137,7 +137,7 @@ export default function DonorFormComponent() {
                             </label>
                         </div>
 
-                        <div className='flex flex-col gap-1'>
+                        <div className='flex flex-col'>
                             <input
                                 className='cursor-pointer'
                                 id='buildings'
@@ -155,7 +155,7 @@ export default function DonorFormComponent() {
                             </label>
                         </div>
 
-                        <div className='flex flex-col gap-1'>
+                        <div className='flex flex-col'>
                             <input
                                 className='cursor-pointer'
                                 id='enterprise'
@@ -176,7 +176,7 @@ export default function DonorFormComponent() {
                 </div>
 
                 <div className='p-1 w-[280px] border-2 rounded'>
-                    <div className='flex flex-col gap-1'>
+                    <div className='flex flex-col'>
                         <label htmlFor='zipcode'>
                             CEP
                         </label>
@@ -188,7 +188,7 @@ export default function DonorFormComponent() {
                         />
                     </div>
 
-                    <div className='flex flex-col gap-1'>
+                    <div className='flex flex-col'>
                         <label htmlFor='street'>
                             Logradouro: Av/Rua/Trav
                         </label>
@@ -200,7 +200,7 @@ export default function DonorFormComponent() {
                         />
                     </div>
 
-                    <div className='flex flex-col gap-1'>
+                    <div className='flex flex-col'>
                         <label htmlFor='district'>
                             Bairro/Distrito
                         </label>
@@ -212,7 +212,7 @@ export default function DonorFormComponent() {
                         />
                     </div>
 
-                    <div className='flex flex-col gap-1'>
+                    <div className='flex flex-col'>
                         <label htmlFor='city'>
                             Cidade
                         </label>
@@ -224,7 +224,7 @@ export default function DonorFormComponent() {
                         />
                     </div>
 
-                    <div className='flex flex-col gap-1'>
+                    <div className='flex flex-col'>
                         <label htmlFor='number_residence'>
                             Nº Casa/Edifício/Empresa
                         </label>
@@ -238,7 +238,7 @@ export default function DonorFormComponent() {
 
                     {formData.type_residence !== 'house' && (
                         <div className='w-full'>
-                            <div className='flex flex-col gap-1'>
+                            <div className='flex flex-col'>
                                 <label htmlFor='building'>
                                     Nome do Edifício
                                 </label>
@@ -253,7 +253,7 @@ export default function DonorFormComponent() {
                                 />
                             </div>
 
-                            <div className='flex flex-col gap-1'>
+                            <div className='flex flex-col'>
                                 <label htmlFor='block'>
                                     Bloco
                                 </label>
@@ -268,7 +268,7 @@ export default function DonorFormComponent() {
                                 />
                             </div>
 
-                            <div className='flex flex-col gap-1'>
+                            <div className='flex flex-col'>
                                 <label htmlFor='livingapartmentroom'>
                                     Apartamento/Sala
                                 </label>
@@ -285,7 +285,7 @@ export default function DonorFormComponent() {
                         </div>
                     )}
 
-                    <div className='flex flex-col gap-1'>
+                    <div className='flex flex-col'>
                         <label htmlFor='reference_point'>
                             Ponto de Referência
                         </label>
@@ -303,7 +303,7 @@ export default function DonorFormComponent() {
                 {formData.type_residence === 'enterprise' && (
                     <div className='w-[280px]'>
                         <div className='p-1 border-2 rounded'>
-                            <div className='flex flex-col gap-1'>
+                            <div className='flex flex-col'>
                                 <label htmlFor='cnpj'>
                                     CNPJ
                                 </label>
@@ -318,7 +318,7 @@ export default function DonorFormComponent() {
                                 />
                             </div>
 
-                            <div className='flex flex-col gap-1'>
+                            <div className='flex flex-col'>
                                 <label htmlFor='corporatename'>
                                     Razão Social
                                 </label>

@@ -4,11 +4,10 @@ import { calculateAge } from '@/app/ts/calcAge';
 import { useState } from 'react';
 import ButtonComponent from '@/components/button';
 
-export default function DriverFormComponent() {
+export default function HelperFormComponent() {
     const [formData, setFormData] = useState({
         name: '',
         cpf: '',
-        cnh: '',
         birthdate: '',
         phone: '',
         email: '',
@@ -21,7 +20,7 @@ export default function DriverFormComponent() {
         building: '',
         block: '',
         livingapartmentroom: '',
-        reference_point: ''
+        reference_point: '',
     });
     const [age, setAge] = useState(0);
 
@@ -44,7 +43,7 @@ export default function DriverFormComponent() {
     };
 
     return (
-        <form className='max-w-[280px] h-full flex flex-col justify-center gap-[5px] text-sm p-1'>
+        <form className='max-w-[280px] w-full h-full flex flex-col justify-center gap-[5px] text-sm p-1'>
             <div className='flex flex-col'>
                 <label htmlFor='name'>Nome</label>
                 <input
@@ -65,19 +64,6 @@ export default function DriverFormComponent() {
                     name='cpf'
                     type='number'
                     value={formData.cpf}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-
-            <div className='flex flex-col'>
-                <label htmlFor='cnh'>CNH</label>
-                <input
-                    className='border border-blue-300 rounded p-0.5'
-                    id='cnh'
-                    name='cnh'
-                    type='number'
-                    value={formData.cnh}
                     onChange={handleChange}
                     required
                 />
@@ -220,7 +206,6 @@ export default function DriverFormComponent() {
                 <div>
                     <div className='flex flex-col'>
                         <label htmlFor='building'>Nome do Edifício</label>
-
                         <input
                             className='border border-blue-300 rounded p-0.5'
                             id='building'
@@ -234,7 +219,7 @@ export default function DriverFormComponent() {
                     <div className='flex flex-col'>
                         <label htmlFor='block'>Bloco</label>
                         <input
-                            className='border border-blue-300 rounded p-0.5'
+                            className='mt-1 block w-full'
                             id='block'
                             name='block'
                             value={formData.block}
@@ -246,10 +231,10 @@ export default function DriverFormComponent() {
                     <div className='flex flex-col'>
                         <label htmlFor='livingapartmentroom'>Apartamento/Sala</label>
                         <input
-                            className='border border-blue-300 rounded p-0.5'
                             id='livingapartmentroom'
                             name='livingapartmentroom'
                             value={formData.livingapartmentroom}
+                            className='mt-1 block w-full'
                             onChange={handleChange}
                             required
                         />
@@ -269,7 +254,7 @@ export default function DriverFormComponent() {
                 />
             </div>
 
-            <div className='flex justify-around pt-2 duration-[400ms]'>
+            <div className='flex justify-around pt-4 sm:pt-8 duration-[400ms]'>
                 <ButtonComponent
                     type='submit'
                 >
