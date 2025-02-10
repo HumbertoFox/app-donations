@@ -3,8 +3,8 @@ import Link from 'next/link';
 
 const linksItems = [
     { title: 'Início', icon: 'fa-solid fa-house', route: '/', hover: 'hover:text-[blue]' },
-    { title: 'Cadastrar Usuário', icon: 'fa-solid fa-user-plus', route: '', hover: 'hover:text-[blue]' },
-    { title: 'Usuários Cadastrados', icon: 'fa-solid fa-users-gear', route: '', hover: 'hover:text-[orange]' },
+    { title: 'Cadastrar Usuário', icon: 'fa-solid fa-user-plus', route: '/users/registeruser', hover: 'hover:text-[blue]' },
+    { title: 'Usuários Cadastrados', icon: 'fa-solid fa-users-gear', route: '/users', hover: 'hover:text-[orange]' },
     { title: 'Cadastrar Veículo', icon: 'fa-solid fa-truck-medical', route: '/vehicles/registervehicle', hover: 'hover:text-[blue]' },
     { title: 'Veículos Cadastrados', icon: 'fa-solid fa-truck', route: '/vehicles', hover: 'hover:text-[orange]' },
     { title: 'Cadastrar Motorista', icon: 'fa-solid fa-address-card', route: '/drivers/registerdriver', hover: 'hover:text-[blue]' },

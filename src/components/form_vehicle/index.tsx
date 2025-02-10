@@ -20,7 +20,7 @@ export default function VehicleFormComponent() {
         });
     };
     return (
-        <form className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm p-1'>
+        <form className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm shadow rounded-lg p-2 mb-2'>
             <div className='flex flex-col'>
                 <label htmlFor='model'>Modelo</label>
                 <input
@@ -81,7 +81,7 @@ export default function VehicleFormComponent() {
                 />
             </div>
 
-            <div className='flex justify-around pt-4 duration-[400ms]'>
+            <div className='flex justify-around pt-2 duration-[400ms]'>
                 <ButtonComponent type='submit'>
                     Cadastrar
                 </ButtonComponent>

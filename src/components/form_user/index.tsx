@@ -1,10 +1,11 @@
 'use client';
 
-import { calculateAge } from '@/app/ts/calcAge';
 import { useState } from 'react';
+import Icons from '@/components/icons';
+import { calculateAge } from '@/app/ts/calcAge';
 import ButtonComponent from '@/components/button';
 
-export default function HelperFormComponent() {
+export default function UserFormComponent() {
     const [formData, setFormData] = useState({
         name: '',
         cpf: '',
@@ -21,8 +22,16 @@ export default function HelperFormComponent() {
         block: '',
         livingapartmentroom: '',
         reference_point: '',
+        password: '',
+        password_confirmation: '',
     });
+
     const [age, setAge] = useState(0);
+    const [isVisibledPassword, setIsVisibledPassword] = useState(false);
+    const [isVisibledPasswordConfirm, setIsVisibledPasswordConfirm] = useState(false);
+
+    const togglePasswordVisibility = () => setIsVisibledPassword(!isVisibledPassword);
+    const togglePasswordConfirmVisibility = () => setIsVisibledPasswordConfirm(!isVisibledPasswordConfirm);
 
     const handleBirthdateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const birthdate = e.target.value;
@@ -51,6 +60,7 @@ export default function HelperFormComponent() {
                     id='name'
                     name='name'
                     value={formData.name}
+                    autoComplete='name'
                     onChange={handleChange}
                     required
                 />
@@ -61,8 +71,8 @@ export default function HelperFormComponent() {
                 <input
                     className='border border-blue-300 rounded p-0.5'
                     id='cpf'
-                    name='cpf'
                     type='number'
+                    name='cpf'
                     value={formData.cpf}
                     onChange={handleChange}
                     required
@@ -94,7 +104,6 @@ export default function HelperFormComponent() {
                     className='border border-blue-300 rounded p-0.5'
                     id='phone'
                     name='phone'
-                    type='tel'
                     value={formData.phone}
                     onChange={handleChange}
                     required
@@ -106,8 +115,8 @@ export default function HelperFormComponent() {
                 <input
                     className='border border-blue-300 rounded p-0.5'
                     id='email'
-                    name='email'
                     type='email'
+                    name='email'
                     value={formData.email}
                     onChange={handleChange}
                     required
@@ -119,8 +128,8 @@ export default function HelperFormComponent() {
                 <input
                     className='border border-blue-300 rounded p-0.5'
                     id='zipcode'
-                    name='zipcode'
                     type='number'
+                    name='zipcode'
                     value={formData.zipcode}
                     onChange={handleChange}
                     required
@@ -164,7 +173,7 @@ export default function HelperFormComponent() {
             </div>
 
             <div className='flex gap-3 justify-center items-center text-center'>
-                <div className='flex gap-1 items-center'>
+                <div className='flex items-center gap-1'>
                     <input
                         className='border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 cursor-pointer'
                         id='house'
@@ -176,7 +185,7 @@ export default function HelperFormComponent() {
                     />
                     <label className='cursor-pointer' htmlFor='house'>Casa</label>
                 </div>
-                <div className='flex gap-1 items-center'>
+                <div className='flex items-center gap-1'>
                     <input
                         className='border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 cursor-pointer'
                         id='buildings'
@@ -206,6 +215,7 @@ export default function HelperFormComponent() {
                 <div>
                     <div className='flex flex-col'>
                         <label htmlFor='building'>Nome do Edifício</label>
+
                         <input
                             className='border border-blue-300 rounded p-0.5'
                             id='building'
@@ -219,7 +229,7 @@ export default function HelperFormComponent() {
                     <div className='flex flex-col'>
                         <label htmlFor='block'>Bloco</label>
                         <input
-                            className='mt-1 block w-full'
+                            className='border border-blue-300 rounded p-0.5'
                             id='block'
                             name='block'
                             value={formData.block}
@@ -231,10 +241,10 @@ export default function HelperFormComponent() {
                     <div className='flex flex-col'>
                         <label htmlFor='livingapartmentroom'>Apartamento/Sala</label>
                         <input
+                            className='mt-1 block w-full'
                             id='livingapartmentroom'
                             name='livingapartmentroom'
                             value={formData.livingapartmentroom}
-                            className='mt-1 block w-full'
                             onChange={handleChange}
                             required
                         />
@@ -254,9 +264,62 @@ export default function HelperFormComponent() {
                 />
             </div>
 
-            <div className='flex justify-around pt-2 duration-[400ms]'>
-                <ButtonComponent type='submit'>
-                    Cadastrar
+            <div className='flex flex-col'>
+                <label htmlFor='password'>Senha</label>
+                <div className='relative'>
+                    <input
+                        className='w-full border border-blue-300 rounded p-0.5'
+                        id='password'
+                        type={isVisibledPassword ? 'text' : 'password'}
+                        name='password'
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                    />
+                    <button
+                        className='absolute right-2 top-1 opacity-50 hover:opacity-100 duration-500'
+                        type='button'
+                        onClick={togglePasswordVisibility}
+                    >
+                        {isVisibledPassword ? (
+                            <Icons icon='fa-regular fa-eye-slash' />
+                        ) : (
+                            <Icons icon='fa-regular fa-eye' />
+                        )}
+                    </button>
+                </div>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor='password_confirmation'>Confirme sua senha</label>
+                <div className='relative'>
+                    <input
+                        className='w-full border border-blue-300 rounded p-0.5'
+                        id='password_confirmation'
+                        type={isVisibledPasswordConfirm ? 'text' : 'password'}
+                        name='password_confirmation'
+                        value={formData.password_confirmation}
+                        onChange={handleChange}
+                        required
+                    />
+
+                    <button
+                        type='button'
+                        className='absolute right-2 top-1 opacity-50 hover:opacity-100 duration-500'
+                        onClick={togglePasswordConfirmVisibility}
+                    >
+                        {isVisibledPasswordConfirm ? (
+                            <Icons icon='fa-regular fa-eye-slash' />
+                        ) : (
+                            <Icons icon='fa-regular fa-eye' />
+                        )}
+                    </button>
+                </div>
+            </div>
+
+            <div className='flex items-center pt-2 justify-center'>
+                <ButtonComponent>
+                    Registrar
                 </ButtonComponent>
             </div>
         </form>
