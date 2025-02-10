@@ -1,7 +1,7 @@
-export function formatDate(date) {
+export function formatDate(date: string | Date): string {
     const createdAt = new Date(date);
 
-    if (isNaN(createdAt)) {
+    if (isNaN(createdAt.getTime())) {
         throw new Error('Invalid date');
     };
 
@@ -12,10 +12,10 @@ export function formatDate(date) {
     return `${day}/${month}/${year}`;
 };
 
-export function formatDateToLocal(date) {
+export function formatDateToLocal(date: string | Date): string {
     const createdAt = new Date(date);
 
-    if (isNaN(createdAt)) {
+    if (isNaN(createdAt.getTime())) {
         throw new Error('Invalid date');
     };
 
