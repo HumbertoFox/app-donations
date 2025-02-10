@@ -1,0 +1,314 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model addresses {
+  id                  BigInt    @id @default(autoincrement())
+  zipcode_id          BigInt
+  type_residence      String    @default("house") @db.VarChar(255)
+  number_residence    String    @db.VarChar(255)
+  building            String?   @db.VarChar(255)
+  block               String?   @db.VarChar(255)
+  livingapartmentroom String?   @db.VarChar(255)
+  reference_point     String    @db.VarChar(255)
+  created_at          DateTime? @db.Timestamp(0)
+  updated_at          DateTime? @db.Timestamp(0)
+  deleted_at          DateTime? @db.Timestamp(0)
+  zipcodes            zipcodes  @relation(fields: [zipcode_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "addresses_zipcode_id_foreign")
+  donors              donors[]
+  drivers             drivers[]
+  helpers             helpers[]
+  users               users[]
+}
+
+model cache {
+  key        String @id @db.VarChar(255)
+  value      String
+  expiration Int
+}
+
+model cache_locks {
+  key        String @id @db.VarChar(255)
+  owner      String @db.VarChar(255)
+  expiration Int
+}
+
+model cnhs {
+  id         BigInt    @id @default(autoincrement())
+  cnh        String    @unique(map: "cnhs_cnh_unique") @db.VarChar(255)
+  cpf_id     BigInt
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  deleted_at DateTime? @db.Timestamp(0)
+  cpfs       cpfs      @relation(fields: [cpf_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cnhs_cpf_id_foreign")
+  drivers    drivers[]
+}
+
+model cnpjs {
+  id            BigInt    @id @default(autoincrement())
+  cnpj          String    @unique(map: "cnpjs_cnpj_unique") @db.VarChar(255)
+  corporatename String    @db.VarChar(255)
+  created_at    DateTime? @db.Timestamp(0)
+  updated_at    DateTime? @db.Timestamp(0)
+  deleted_at    DateTime? @db.Timestamp(0)
+  donors        donors[]
+}
+
+model cpfs {
+  id         BigInt    @id @default(autoincrement())
+  cpf        String    @unique(map: "cpfs_cpf_unique") @db.VarChar(255)
+  name       String    @db.VarChar(255)
+  birthdate  DateTime  @db.Date
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  deleted_at DateTime? @db.Timestamp(0)
+  cnhs       cnhs[]
+  helpers    helpers[]
+  users      users[]
+}
+
+model donation_items {
+  id          BigInt    @id @default(autoincrement())
+  donation_id BigInt
+  user_id     BigInt
+  item_id     BigInt
+  quantity    Int
+  created_at  DateTime? @db.Timestamp(0)
+  updated_at  DateTime? @db.Timestamp(0)
+  deleted_at  DateTime? @db.Timestamp(0)
+  donations   donations @relation(fields: [donation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "donation_items_donation_id_foreign")
+  items       items     @relation(fields: [item_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "donation_items_item_id_foreign")
+  users       users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "donation_items_user_id_foreign")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model donations {
+  id             BigInt           @id @default(autoincrement())
+  donor_id       BigInt
+  user_id        BigInt
+  status         String           @default("Pendente") @db.VarChar(255)
+  created_at     DateTime?        @db.Timestamp(0)
+  updated_at     DateTime?        @db.Timestamp(0)
+  deleted_at     DateTime?        @db.Timestamp(0)
+  donation_items donation_items[]
+  donors         donors           @relation(fields: [donor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "donations_donor_id_foreign")
+  users          users            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "donations_user_id_foreign")
+  records        records[]
+}
+
+model donors {
+  id         BigInt      @id @default(autoincrement())
+  name       String      @db.VarChar(255)
+  phone_id   BigInt
+  cnpj_id    BigInt?
+  address_id BigInt
+  user_id    BigInt
+  created_at DateTime?   @db.Timestamp(0)
+  updated_at DateTime?   @db.Timestamp(0)
+  deleted_at DateTime?   @db.Timestamp(0)
+  donations  donations[]
+  addresses  addresses   @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "donors_address_id_foreign")
+  cnpjs      cnpjs?      @relation(fields: [cnpj_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "donors_cnpj_id_foreign")
+  phones     phones      @relation(fields: [phone_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "donors_phone_id_foreign")
+  users      users       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "donors_user_id_foreign")
+  records    records[]
+}
+
+model drivers {
+  id         BigInt    @id @default(autoincrement())
+  cnh_id     BigInt
+  phone_id   BigInt
+  address_id BigInt
+  user_id    BigInt
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  deleted_at DateTime? @db.Timestamp(0)
+  addresses  addresses @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "drivers_address_id_foreign")
+  cnhs       cnhs      @relation(fields: [cnh_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "drivers_cnh_id_foreign")
+  phones     phones    @relation(fields: [phone_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "drivers_phone_id_foreign")
+  users      users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "drivers_user_id_foreign")
+  records    records[]
+}
+
+model failed_jobs {
+  id         BigInt   @id @default(autoincrement())
+  uuid       String   @unique(map: "failed_jobs_uuid_unique") @db.VarChar(255)
+  connection String
+  queue      String
+  payload    String
+  exception  String
+  failed_at  DateTime @default(now()) @db.Timestamp(0)
+}
+
+model helpers {
+  id                                     BigInt    @id @default(autoincrement())
+  cpf_id                                 BigInt
+  phone_id                               BigInt
+  address_id                             BigInt
+  user_id                                BigInt
+  created_at                             DateTime? @db.Timestamp(0)
+  updated_at                             DateTime? @db.Timestamp(0)
+  deleted_at                             DateTime? @db.Timestamp(0)
+  addresses                              addresses @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "helpers_address_id_foreign")
+  cpfs                                   cpfs      @relation(fields: [cpf_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "helpers_cpf_id_foreign")
+  phones                                 phones    @relation(fields: [phone_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "helpers_phone_id_foreign")
+  users                                  users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "helpers_user_id_foreign")
+  records_records_helper_idTohelpers     records[] @relation("records_helper_idTohelpers")
+  records_records_helper_two_idTohelpers records[] @relation("records_helper_two_idTohelpers")
+}
+
+model items {
+  id             BigInt           @id @default(autoincrement())
+  item           String           @unique(map: "items_item_unique") @db.VarChar(255)
+  user_id        BigInt
+  created_at     DateTime?        @db.Timestamp(0)
+  updated_at     DateTime?        @db.Timestamp(0)
+  deleted_at     DateTime?        @db.Timestamp(0)
+  donation_items donation_items[]
+  users          users            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "items_user_id_foreign")
+}
+
+model job_batches {
+  id             String  @id @db.VarChar(255)
+  name           String  @db.VarChar(255)
+  total_jobs     Int
+  pending_jobs   Int
+  failed_jobs    Int
+  failed_job_ids String
+  options        String?
+  cancelled_at   Int?
+  created_at     Int
+  finished_at    Int?
+}
+
+model jobs {
+  id           BigInt @id @default(autoincrement())
+  queue        String @db.VarChar(255)
+  payload      String
+  attempts     Int    @db.SmallInt
+  reserved_at  Int?
+  available_at Int
+  created_at   Int
+
+  @@index([queue], map: "jobs_queue_index")
+}
+
+model migrations {
+  id        Int    @id @default(autoincrement())
+  migration String @db.VarChar(255)
+  batch     Int
+}
+
+model password_reset_tokens {
+  email      String    @id @db.VarChar(255)
+  token      String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+}
+
+model phones {
+  id            BigInt    @id @default(autoincrement())
+  phone         String    @unique(map: "phones_phone_unique") @db.VarChar(255)
+  contact       String?   @db.VarChar(255)
+  contact_other String?   @db.VarChar(255)
+  email         String?   @db.VarChar(255)
+  created_at    DateTime? @db.Timestamp(0)
+  updated_at    DateTime? @db.Timestamp(0)
+  deleted_at    DateTime? @db.Timestamp(0)
+  donors        donors[]
+  drivers       drivers[]
+  helpers       helpers[]
+  users         users[]
+}
+
+model records {
+  id                                     BigInt    @id @default(autoincrement())
+  observation                            String    @db.VarChar(255)
+  colleted_date                          DateTime  @db.Date
+  donor_id                               BigInt
+  donation_id                            BigInt
+  vehicle_id                             BigInt
+  driver_id                              BigInt
+  helper_id                              BigInt
+  helper_two_id                          BigInt
+  user_id                                BigInt
+  created_at                             DateTime? @db.Timestamp(0)
+  updated_at                             DateTime? @db.Timestamp(0)
+  deleted_at                             DateTime? @db.Timestamp(0)
+  donations                              donations @relation(fields: [donation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "records_donation_id_foreign")
+  donors                                 donors    @relation(fields: [donor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "records_donor_id_foreign")
+  drivers                                drivers   @relation(fields: [driver_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "records_driver_id_foreign")
+  helpers_records_helper_idTohelpers     helpers   @relation("records_helper_idTohelpers", fields: [helper_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "records_helper_id_foreign")
+  helpers_records_helper_two_idTohelpers helpers   @relation("records_helper_two_idTohelpers", fields: [helper_two_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "records_helper_two_id_foreign")
+  users                                  users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "records_user_id_foreign")
+  vehicles                               vehicles  @relation(fields: [vehicle_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "records_vehicle_id_foreign")
+}
+
+model sessions {
+  id            String  @id @db.VarChar(255)
+  user_id       BigInt?
+  ip_address    String? @db.VarChar(45)
+  user_agent    String?
+  payload       String
+  last_activity Int
+
+  @@index([last_activity], map: "sessions_last_activity_index")
+  @@index([user_id], map: "sessions_user_id_index")
+}
+
+model users {
+  id                BigInt           @id @default(autoincrement())
+  name              String           @db.VarChar(255)
+  cpf_id            BigInt
+  address_id        BigInt
+  email             String           @unique(map: "users_email_unique") @db.VarChar(255)
+  email_verified_at DateTime?        @db.Timestamp(0)
+  phone_id          BigInt
+  password          String           @db.VarChar(255)
+  remember_token    String?          @db.VarChar(100)
+  created_at        DateTime?        @db.Timestamp(0)
+  updated_at        DateTime?        @db.Timestamp(0)
+  deleted_at        DateTime?        @db.Timestamp(0)
+  donation_items    donation_items[]
+  donations         donations[]
+  donors            donors[]
+  drivers           drivers[]
+  helpers           helpers[]
+  items             items[]
+  records           records[]
+  addresses         addresses        @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_address_id_foreign")
+  cpfs              cpfs             @relation(fields: [cpf_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_cpf_id_foreign")
+  phones            phones           @relation(fields: [phone_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_phone_id_foreign")
+  vehicles          vehicles[]
+}
+
+model vehicles {
+  id         BigInt    @id @default(autoincrement())
+  renavam    String    @unique(map: "vehicles_renavam_unique") @db.VarChar(255)
+  plate      String    @unique(map: "vehicles_plate_unique") @db.VarChar(255)
+  km         String    @db.VarChar(255)
+  model      String    @db.VarChar(255)
+  automaker  String    @db.VarChar(255)
+  user_id    BigInt
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  deleted_at DateTime? @db.Timestamp(0)
+  records    records[]
+  users      users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vehicles_user_id_foreign")
+}
+
+model zipcodes {
+  id         BigInt      @id @default(autoincrement())
+  zipcode    String      @unique(map: "zipcodes_zipcode_unique") @db.VarChar(255)
+  city       String      @db.VarChar(255)
+  district   String      @db.VarChar(255)
+  street     String      @db.VarChar(255)
+  created_at DateTime?   @db.Timestamp(0)
+  updated_at DateTime?   @db.Timestamp(0)
+  deleted_at DateTime?   @db.Timestamp(0)
+  addresses  addresses[]
+}
