@@ -1,15 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import {
+    useActionState,
+    useEffect,
+    useState
+} from 'react';
 import ButtonComponent from '@/components/button';
 import Link from 'next/link';
 import Icons from '@/components/icons';
+import { signin } from '@/app/actions/authin';
+import { Toast } from '@/app/ts/sweetAlert';
+import { useRouter } from 'next/navigation';
 
 export default function FormLoginComponent() {
+    const [state, action, pending] = useActionState(signin, undefined);
+    const router = useRouter();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
-        remember: false,
+        remember: false
     });
 
     const [isVisibledPassword, setIsVisibledPassword] = useState(false);
@@ -24,8 +33,37 @@ export default function FormLoginComponent() {
         });
     };
 
+    const resetForm = () => {
+        setFormData({
+            email: '',
+            password: '',
+            remember: false
+        });
+    };
+
+    useEffect(() => {
+        if (state?.message) {
+            Toast.fire({
+                icon: 'success',
+                title: state.message,
+            });
+
+            resetForm();
+            router.push('/');
+        };
+
+        if (state?.info) {
+            Toast.fire({
+                icon: 'info',
+                title: state.info
+            });
+        };
+    }, [router, state]);
     return (
-        <form className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm shadow rounded-lg p-2 mb-2'>
+        <form
+            className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm shadow rounded-lg p-2 mb-2'
+            action={action}
+        >
             <div className='flex flex-col'>
                 <label htmlFor='email'>E-mail</label>
                 <input
@@ -36,6 +74,11 @@ export default function FormLoginComponent() {
                     value={formData.email}
                     onChange={handleChange}
                 />
+                {state?.errors?.email && (
+                    <p className='text-red-500 text-sm pl-2'>
+                        {state.errors.email}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -62,6 +105,11 @@ export default function FormLoginComponent() {
                         )}
                     </button>
                 </div>
+                {state?.errors?.password && (
+                    <p className='text-red-500 text-sm pl-2'>
+                        {state.errors.password}
+                    </p>
+                )}
             </div>
 
             <div className='mt-4 block'>
@@ -87,8 +135,11 @@ export default function FormLoginComponent() {
                     Esqueceu sua senha?
                 </Link>
 
-                <ButtonComponent>
-                    Conecte-se
+                <ButtonComponent
+                    type='submit'
+                    disabled={pending}
+                >
+                    {pending ? 'Conectando...' : 'Conecte-se'}
                 </ButtonComponent>
             </div>
         </form>

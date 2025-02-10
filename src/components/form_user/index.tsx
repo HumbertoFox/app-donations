@@ -26,9 +26,9 @@ export default function UserFormComponent() {
         password_confirmation: '',
     });
 
-    const [age, setAge] = useState(0);
-    const [isVisibledPassword, setIsVisibledPassword] = useState(false);
-    const [isVisibledPasswordConfirm, setIsVisibledPasswordConfirm] = useState(false);
+    const [age, setAge] = useState<number>(0);
+    const [isVisibledPassword, setIsVisibledPassword] = useState<boolean>(false);
+    const [isVisibledPasswordConfirm, setIsVisibledPasswordConfirm] = useState<boolean>(false);
 
     const togglePasswordVisibility = () => setIsVisibledPassword(!isVisibledPassword);
     const togglePasswordConfirmVisibility = () => setIsVisibledPasswordConfirm(!isVisibledPasswordConfirm);

@@ -22,7 +22,7 @@ export default function HelperFormComponent() {
         livingapartmentroom: '',
         reference_point: '',
     });
-    const [age, setAge] = useState(0);
+    const [age, setAge] = useState<number>(0);
 
     const handleBirthdateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const birthdate = e.target.value;

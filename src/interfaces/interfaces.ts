@@ -38,3 +38,9 @@ export interface CheckedZipCodeProps {
     zipCodeRef: React.RefObject<HTMLInputElement>;
     numberResidenceRef: React.RefObject<HTMLInputElement>;
 };
+
+export interface SessionPayload {
+    email?: string;
+    id?: string;
+    [key: string]: unknown;
+};
