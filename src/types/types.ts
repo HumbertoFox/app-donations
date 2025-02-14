@@ -1,17 +1,27 @@
-export type FormStateUp =
+export type FormStateSignUp =
     | {
         errors?: {
-            cpf?: string[];
             name?: string[];
-            email?: string[];
+            cpf?: string[];
+            birthdate?: string[];
             phone?: string[];
+            email?: string[];
+            zipcode?: string[];
+            street?: string[];
+            district?: string[];
+            city?: string[];
+            number_residence?: string[];
+            type_residence?: string[];
+            building?: string[];
+            block?: string[];
+            livingapartmentroom?: string[];
+            reference_point?: string[];
             password?: string[];
         }
         message?: string;
     } | undefined;
 
-
-export type FormStateIn =
+export type FormStateSignIn =
     | {
         errors?: {
             email?: string[];
@@ -23,3 +33,15 @@ export type FormStateIn =
 export type FormErrors = {
     [key: string]: string;
 };
+
+export type FormStateVehicleUp =
+    | {
+        errors?: {
+            model?: string[];
+            automaker?: string[];
+            renavam?: string[];
+            plate?: string[];
+            km?: string[];
+        }
+        message?: string;
+    } | undefined;

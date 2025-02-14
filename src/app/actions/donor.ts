@@ -1,7 +1,5 @@
 'use server';
 
-const donorUpdateAction = () => {
-
+export async function registerDonor() {
+    
 }
-
-export default donorUpdateAction;

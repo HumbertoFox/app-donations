@@ -8,12 +8,12 @@ import {
 import ButtonComponent from '@/components/button';
 import Link from 'next/link';
 import Icons from '@/components/icons';
-import { signin } from '@/app/actions/authin';
+import { signIn } from '@/app/actions/authin';
 import { Toast } from '@/app/ts/sweetAlert';
 import { useRouter } from 'next/navigation';
 
 export default function FormLoginComponent() {
-    const [state, action, pending] = useActionState(signin, undefined);
+    const [state, action, pending] = useActionState(signIn, undefined);
     const router = useRouter();
     const [formData, setFormData] = useState({
         email: '',

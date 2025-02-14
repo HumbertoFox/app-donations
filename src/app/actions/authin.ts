@@ -1,13 +1,13 @@
 'use server';
 
-import { SigninFormSchema } from '@/app/models/definitions';
-import { FormStateIn } from '@/types/types';
+import { signInFormSchema } from '@/app/models/definitions';
+import { FormStateSignIn } from '@/types/types';
 import * as bcrypt from 'bcryptjs';
 import Prisma from '@/app/models/prismadb';
 import { createSessionToken } from '@/app/models/createtoken';
 
-export async function signin(state: FormStateIn, formData: FormData) {
-    const validatedFields = SigninFormSchema.safeParse({
+export async function signIn(state: FormStateSignIn, formData: FormData) {
+    const validatedFields = signInFormSchema.safeParse({
         email: formData.get('email') as string,
         password: formData.get('password') as string,
     });

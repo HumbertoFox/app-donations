@@ -1,11 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import {
+    useActionState,
+    useRef,
+    useState
+} from 'react';
 import Icons from '@/components/icons';
 import { calculateAge } from '@/app/ts/calcAge';
 import ButtonComponent from '@/components/button';
+import { checkedZipCode } from '@/app/ts/viaCep';
+import { signUp } from '@/app/actions/authup';
+import { FormErrors } from '@/types/types';
 
 export default function UserFormComponent() {
+    const [state, action, pending] = useActionState(signUp, undefined);
     const [formData, setFormData] = useState({
         name: '',
         cpf: '',
@@ -23,15 +31,45 @@ export default function UserFormComponent() {
         livingapartmentroom: '',
         reference_point: '',
         password: '',
-        password_confirmation: '',
+        password_confirmation: ''
     });
 
+    const cpfRef = useRef<HTMLInputElement | null>(null);
+    const zipCodeRef = useRef<HTMLInputElement | null>(null);
+    const numberResidenceRef = useRef<HTMLInputElement | null>(null);
     const [age, setAge] = useState<number>(0);
     const [isVisibledPassword, setIsVisibledPassword] = useState<boolean>(false);
     const [isVisibledPasswordConfirm, setIsVisibledPasswordConfirm] = useState<boolean>(false);
 
     const togglePasswordVisibility = () => setIsVisibledPassword(!isVisibledPassword);
     const togglePasswordConfirmVisibility = () => setIsVisibledPasswordConfirm(!isVisibledPasswordConfirm);
+
+    const handleZipCodeChange = (element: React.ChangeEvent<HTMLInputElement>) => {
+        const newZipCode = element.target.value;
+        setFormData({
+            ...formData,
+            zipcode: newZipCode
+        });
+        checkedZipCode({
+            element,
+            setFormData,
+            errors,
+            zipCodeRef,
+            numberResidenceRef
+        });
+    };
+
+    const validateForm = (): FormErrors => {
+        const errors: FormErrors = {};
+
+        if (formData.password !== formData.password_confirmation) {
+            errors.password = 'As senhas não coincidem';
+        };
+
+        return errors;
+    };
+
+    const errors = validateForm();
 
     const handleBirthdateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const birthdate = e.target.value;
@@ -51,8 +89,33 @@ export default function UserFormComponent() {
         });
     };
 
+    // const resetForm = () => {
+    //     setFormData({
+    //         name: '',
+    //         cpf: '',
+    //         birthdate: '',
+    //         phone: '',
+    //         email: '',
+    //         zipcode: '',
+    //         street: '',
+    //         district: '',
+    //         city: '',
+    //         number_residence: '',
+    //         type_residence: 'house',
+    //         building: '',
+    //         block: '',
+    //         livingapartmentroom: '',
+    //         reference_point: '',
+    //         password: '',
+    //         password_confirmation: ''
+    //     });
+    // };
+
     return (
-        <form className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm shadow rounded-lg p-2 mb-2'>
+        <form
+            className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm shadow rounded-lg p-2 mb-2'
+            action={action}
+        >
             <div className='flex flex-col'>
                 <label htmlFor='name'>Nome</label>
                 <input
@@ -64,6 +127,11 @@ export default function UserFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.name && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.name}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -76,7 +144,13 @@ export default function UserFormComponent() {
                     value={formData.cpf}
                     onChange={handleChange}
                     required
+                    ref={cpfRef}
                 />
+                {state?.errors?.cpf && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.cpf}
+                    </p>
+                )}
             </div>
 
             <div className='flex items-end'>
@@ -96,6 +170,11 @@ export default function UserFormComponent() {
                     <p>{age}</p>
                     <p>anos</p>
                 </div>
+                {state?.errors?.building && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.building}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -108,6 +187,11 @@ export default function UserFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.phone && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.phone}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -121,6 +205,11 @@ export default function UserFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.email && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.email}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -132,8 +221,15 @@ export default function UserFormComponent() {
                     name='zipcode'
                     value={formData.zipcode}
                     onChange={handleChange}
+                    onBlur={handleZipCodeChange}
                     required
+                    ref={zipCodeRef}
                 />
+                {state?.errors?.zipcode && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.zipcode}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -146,6 +242,11 @@ export default function UserFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.street && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.street}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -158,6 +259,11 @@ export default function UserFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.district && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.district}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -170,6 +276,11 @@ export default function UserFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.city && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.city}
+                    </p>
+                )}
             </div>
 
             <div className='flex gap-3 justify-center items-center text-center'>
@@ -183,7 +294,11 @@ export default function UserFormComponent() {
                         onChange={handleChange}
                         checked={formData.type_residence === 'house'}
                     />
-                    <label className='cursor-pointer' htmlFor='house'>Casa</label>
+                    <label
+                        className='cursor-pointer'
+                        htmlFor='house'>
+                        Casa
+                    </label>
                 </div>
                 <div className='flex items-center gap-1'>
                     <input
@@ -195,7 +310,11 @@ export default function UserFormComponent() {
                         onChange={handleChange}
                         checked={formData.type_residence === 'buildings'}
                     />
-                    <label className='cursor-pointer' htmlFor='buildings'>Edifício</label>
+                    <label
+                        className='cursor-pointer'
+                        htmlFor='buildings'>
+                        Edifício
+                    </label>
                 </div>
             </div>
 
@@ -208,7 +327,13 @@ export default function UserFormComponent() {
                     value={formData.number_residence}
                     onChange={handleChange}
                     required
+                    ref={numberResidenceRef}
                 />
+                {state?.errors?.number_residence && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.number_residence}
+                    </p>
+                )}
             </div>
 
             {formData.type_residence === 'buildings' && (
@@ -224,6 +349,11 @@ export default function UserFormComponent() {
                             onChange={handleChange}
                             required
                         />
+                        {state?.errors?.building && (
+                            <p className='text-red-500 text-xs pl-2'>
+                                {state.errors.building}
+                            </p>
+                        )}
                     </div>
 
                     <div className='flex flex-col'>
@@ -236,6 +366,11 @@ export default function UserFormComponent() {
                             onChange={handleChange}
                             required
                         />
+                        {state?.errors?.block && (
+                            <p className='text-red-500 text-xs pl-2'>
+                                {state.errors.block}
+                            </p>
+                        )}
                     </div>
 
                     <div className='flex flex-col'>
@@ -248,6 +383,11 @@ export default function UserFormComponent() {
                             onChange={handleChange}
                             required
                         />
+                        {state?.errors?.livingapartmentroom && (
+                            <p className='text-red-500 text-xs pl-2'>
+                                {state.errors.livingapartmentroom}
+                            </p>
+                        )}
                     </div>
                 </div>
             )}
@@ -262,6 +402,11 @@ export default function UserFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.reference_point && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.reference_point}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -270,7 +415,10 @@ export default function UserFormComponent() {
                     <input
                         className='w-full border border-blue-300 rounded p-0.5'
                         id='password'
-                        type={isVisibledPassword ? 'text' : 'password'}
+                        type={isVisibledPassword
+                            ? 'text'
+                            : 'password'
+                        }
                         name='password'
                         value={formData.password}
                         onChange={handleChange}
@@ -279,6 +427,10 @@ export default function UserFormComponent() {
                     <button
                         className='absolute right-2 top-1 opacity-50 hover:opacity-100 duration-500'
                         type='button'
+                        title={isVisibledPassword
+                            ? 'Não Mostrar Senha'
+                            : 'Mostrar Senha'
+                        }
                         onClick={togglePasswordVisibility}
                     >
                         {isVisibledPassword ? (
@@ -288,6 +440,20 @@ export default function UserFormComponent() {
                         )}
                     </button>
                 </div>
+                {state?.errors?.password && (
+                    <div>
+                        <p className='text-red-500 text-sm pl-2'>A senha deve:</p>
+                        <ul>
+                            {state.errors.password.map(error => (
+                                <li
+                                    className='text-red-500 text-sm pl-2'
+                                    key={error}
+                                >- {error}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -296,7 +462,10 @@ export default function UserFormComponent() {
                     <input
                         className='w-full border border-blue-300 rounded p-0.5'
                         id='password_confirmation'
-                        type={isVisibledPasswordConfirm ? 'text' : 'password'}
+                        type={isVisibledPasswordConfirm
+                            ? 'text'
+                            : 'password'
+                        }
                         name='password_confirmation'
                         value={formData.password_confirmation}
                         onChange={handleChange}
@@ -304,8 +473,12 @@ export default function UserFormComponent() {
                     />
 
                     <button
-                        type='button'
                         className='absolute right-2 top-1 opacity-50 hover:opacity-100 duration-500'
+                        type='button'
+                        title={isVisibledPasswordConfirm
+                            ? 'Não Mostrar Senha'
+                            : 'Mostrar Senha'
+                        }
                         onClick={togglePasswordConfirmVisibility}
                     >
                         {isVisibledPasswordConfirm ? (
@@ -315,11 +488,22 @@ export default function UserFormComponent() {
                         )}
                     </button>
                 </div>
+                {errors.password && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {errors.password}
+                    </p>
+                )}
             </div>
 
             <div className='flex items-center pt-2 justify-center'>
-                <ButtonComponent>
-                    Registrar
+                <ButtonComponent
+                    type='submit'
+                    disabled={pending || Object.keys(state?.errors || {}).length > 0}
+                >
+                    {pending
+                        ? 'Registrando...'
+                        : 'Registrar'
+                    }
                 </ButtonComponent>
             </div>
         </form>

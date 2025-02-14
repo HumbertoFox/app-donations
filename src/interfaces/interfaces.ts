@@ -22,21 +22,31 @@ export interface IconsProps {
 };
 
 interface FormData {
+    name: string;
+    cpf: string;
+    birthdate: string;
+    phone: string;
+    email: string;
+    zipcode: string;
     street: string;
     district: string;
     city: string;
-};
-
-interface Errors {
-    zipcode?: string | null;
+    number_residence: string;
+    type_residence: string;
+    building: string;
+    block: string;
+    livingapartmentroom: string;
+    reference_point: string;
+    password: string;
+    password_confirmation: string;
 };
 
 export interface CheckedZipCodeProps {
     element: React.ChangeEvent<HTMLInputElement>;
     setFormData: React.Dispatch<SetStateAction<FormData>>;
-    errors: Errors;
-    zipCodeRef: React.RefObject<HTMLInputElement>;
-    numberResidenceRef: React.RefObject<HTMLInputElement>;
+    errors: { [key: string]: string | null };
+    zipCodeRef: React.RefObject<HTMLInputElement | null>;
+    numberResidenceRef: React.RefObject<HTMLInputElement | null>;
 };
 
 export interface SessionPayload {
