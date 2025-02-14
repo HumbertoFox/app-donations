@@ -73,15 +73,18 @@ export const signUpFormSchema = z.object({
     building: z
         .string()
         .min(1, { message: 'Campo Obrigatório.' })
-        .trim(),
+        .trim()
+        .nullable(),
     block: z
         .string()
         .min(1, { message: 'Campo Obrigatório.' })
-        .trim(),
+        .trim()
+        .nullable(),
     livingapartmentroom: z
         .string()
         .min(1, { message: 'Campo Obrigatório.' })
-        .trim(),
+        .trim()
+        .nullable(),
     reference_point: z
         .string()
         .min(1, { message: 'Campo Obrigatório.' })

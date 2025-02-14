@@ -16,8 +16,8 @@ model addresses {
   block               String?   @db.VarChar(255)
   livingapartmentroom String?   @db.VarChar(255)
   reference_point     String    @db.VarChar(255)
-  created_at          DateTime? @db.Timestamp(0)
-  updated_at          DateTime? @db.Timestamp(0)
+  created_at          DateTime? @default(now())
+  updated_at          DateTime? @updatedAt()
   deleted_at          DateTime? @db.Timestamp(0)
   zipcodes            zipcodes  @relation(fields: [zipcode_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "addresses_zipcode_id_foreign")
   donors              donors[]
@@ -42,8 +42,8 @@ model cnhs {
   id         BigInt    @id @default(autoincrement())
   cnh        String    @unique(map: "cnhs_cnh_unique") @db.VarChar(255)
   cpf_id     BigInt
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime? @db.Timestamp(0)
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt()
   deleted_at DateTime? @db.Timestamp(0)
   cpfs       cpfs      @relation(fields: [cpf_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cnhs_cpf_id_foreign")
   drivers    drivers[]
@@ -53,8 +53,8 @@ model cnpjs {
   id            BigInt    @id @default(autoincrement())
   cnpj          String    @unique(map: "cnpjs_cnpj_unique") @db.VarChar(255)
   corporatename String    @db.VarChar(255)
-  created_at    DateTime? @db.Timestamp(0)
-  updated_at    DateTime? @db.Timestamp(0)
+  created_at    DateTime? @default(now())
+  updated_at    DateTime? @updatedAt()
   deleted_at    DateTime? @db.Timestamp(0)
   donors        donors[]
 }
@@ -64,8 +64,8 @@ model cpfs {
   cpf        String    @unique(map: "cpfs_cpf_unique") @db.VarChar(255)
   name       String    @db.VarChar(255)
   birthdate  DateTime  @db.Date
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime? @db.Timestamp(0)
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt()
   deleted_at DateTime? @db.Timestamp(0)
   cnhs       cnhs[]
   helpers    helpers[]
@@ -78,8 +78,8 @@ model donation_items {
   user_id     BigInt
   item_id     BigInt
   quantity    Int
-  created_at  DateTime? @db.Timestamp(0)
-  updated_at  DateTime? @db.Timestamp(0)
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @updatedAt()
   deleted_at  DateTime? @db.Timestamp(0)
   donations   donations @relation(fields: [donation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "donation_items_donation_id_foreign")
   items       items     @relation(fields: [item_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "donation_items_item_id_foreign")
@@ -92,8 +92,8 @@ model donations {
   donor_id       BigInt
   user_id        BigInt
   status         String           @default("Pendente") @db.VarChar(255)
-  created_at     DateTime?        @db.Timestamp(0)
-  updated_at     DateTime?        @db.Timestamp(0)
+  created_at     DateTime?        @default(now())
+  updated_at     DateTime?        @updatedAt()
   deleted_at     DateTime?        @db.Timestamp(0)
   donation_items donation_items[]
   donors         donors           @relation(fields: [donor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "donations_donor_id_foreign")
@@ -108,8 +108,8 @@ model donors {
   cnpj_id    BigInt?
   address_id BigInt
   user_id    BigInt
-  created_at DateTime?   @db.Timestamp(0)
-  updated_at DateTime?   @db.Timestamp(0)
+  created_at DateTime?   @default(now())
+  updated_at DateTime?   @updatedAt()
   deleted_at DateTime?   @db.Timestamp(0)
   donations  donations[]
   addresses  addresses   @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "donors_address_id_foreign")
@@ -125,8 +125,8 @@ model drivers {
   phone_id   BigInt
   address_id BigInt
   user_id    BigInt
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime? @db.Timestamp(0)
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt()
   deleted_at DateTime? @db.Timestamp(0)
   addresses  addresses @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "drivers_address_id_foreign")
   cnhs       cnhs      @relation(fields: [cnh_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "drivers_cnh_id_foreign")
@@ -151,8 +151,8 @@ model helpers {
   phone_id                               BigInt
   address_id                             BigInt
   user_id                                BigInt
-  created_at                             DateTime? @db.Timestamp(0)
-  updated_at                             DateTime? @db.Timestamp(0)
+  created_at                             DateTime? @default(now())
+  updated_at                             DateTime? @updatedAt()
   deleted_at                             DateTime? @db.Timestamp(0)
   addresses                              addresses @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "helpers_address_id_foreign")
   cpfs                                   cpfs      @relation(fields: [cpf_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "helpers_cpf_id_foreign")
@@ -166,8 +166,8 @@ model items {
   id             BigInt           @id @default(autoincrement())
   item           String           @unique(map: "items_item_unique") @db.VarChar(255)
   user_id        BigInt
-  created_at     DateTime?        @db.Timestamp(0)
-  updated_at     DateTime?        @db.Timestamp(0)
+  created_at     DateTime?        @default(now())
+  updated_at     DateTime?        @updatedAt()
   deleted_at     DateTime?        @db.Timestamp(0)
   donation_items donation_items[]
   users          users            @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "items_user_id_foreign")
@@ -216,8 +216,8 @@ model phones {
   contact       String?   @db.VarChar(255)
   contact_other String?   @db.VarChar(255)
   email         String?   @db.VarChar(255)
-  created_at    DateTime? @db.Timestamp(0)
-  updated_at    DateTime? @db.Timestamp(0)
+  created_at    DateTime? @default(now())
+  updated_at    DateTime? @updatedAt()
   deleted_at    DateTime? @db.Timestamp(0)
   donors        donors[]
   drivers       drivers[]
@@ -236,8 +236,8 @@ model records {
   helper_id                              BigInt
   helper_two_id                          BigInt
   user_id                                BigInt
-  created_at                             DateTime? @db.Timestamp(0)
-  updated_at                             DateTime? @db.Timestamp(0)
+  created_at                             DateTime? @default(now())
+  updated_at                             DateTime? @updatedAt()
   deleted_at                             DateTime? @db.Timestamp(0)
   donations                              donations @relation(fields: [donation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "records_donation_id_foreign")
   donors                                 donors    @relation(fields: [donor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "records_donor_id_foreign")
@@ -270,8 +270,8 @@ model users {
   phone_id          BigInt
   password          String           @db.VarChar(255)
   remember_token    String?          @db.VarChar(100)
-  created_at        DateTime?        @db.Timestamp(0)
-  updated_at        DateTime?        @db.Timestamp(0)
+  created_at        DateTime?        @default(now())
+  updated_at        DateTime?        @updatedAt()
   deleted_at        DateTime?        @db.Timestamp(0)
   donation_items    donation_items[]
   donations         donations[]
@@ -294,8 +294,8 @@ model vehicles {
   model      String    @db.VarChar(255)
   automaker  String    @db.VarChar(255)
   user_id    BigInt
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime? @db.Timestamp(0)
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt()
   deleted_at DateTime? @db.Timestamp(0)
   records    records[]
   users      users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vehicles_user_id_foreign")
@@ -307,8 +307,8 @@ model zipcodes {
   city       String      @db.VarChar(255)
   district   String      @db.VarChar(255)
   street     String      @db.VarChar(255)
-  created_at DateTime?   @db.Timestamp(0)
-  updated_at DateTime?   @db.Timestamp(0)
+  created_at DateTime?   @default(now())
+  updated_at DateTime?   @updatedAt()
   deleted_at DateTime?   @db.Timestamp(0)
   addresses  addresses[]
 }

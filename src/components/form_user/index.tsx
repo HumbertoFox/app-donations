@@ -2,6 +2,7 @@
 
 import {
     useActionState,
+    useEffect,
     useRef,
     useState
 } from 'react';
@@ -11,6 +12,7 @@ import ButtonComponent from '@/components/button';
 import { checkedZipCode } from '@/app/ts/viaCep';
 import { signUp } from '@/app/actions/authup';
 import { FormErrors } from '@/types/types';
+import { Toast } from '@/app/ts/sweetAlert';
 
 export default function UserFormComponent() {
     const [state, action, pending] = useActionState(signUp, undefined);
@@ -89,28 +91,46 @@ export default function UserFormComponent() {
         });
     };
 
-    // const resetForm = () => {
-    //     setFormData({
-    //         name: '',
-    //         cpf: '',
-    //         birthdate: '',
-    //         phone: '',
-    //         email: '',
-    //         zipcode: '',
-    //         street: '',
-    //         district: '',
-    //         city: '',
-    //         number_residence: '',
-    //         type_residence: 'house',
-    //         building: '',
-    //         block: '',
-    //         livingapartmentroom: '',
-    //         reference_point: '',
-    //         password: '',
-    //         password_confirmation: ''
-    //     });
-    // };
+    const resetForm = () => {
+        setFormData({
+            name: '',
+            cpf: '',
+            birthdate: '',
+            phone: '',
+            email: '',
+            zipcode: '',
+            street: '',
+            district: '',
+            city: '',
+            number_residence: '',
+            type_residence: 'house',
+            building: '',
+            block: '',
+            livingapartmentroom: '',
+            reference_point: '',
+            password: '',
+            password_confirmation: ''
+        });
+        setAge(0);
+    };
 
+    useEffect(() => {
+        if (state?.message) {
+            Toast.fire({
+                icon: 'success',
+                title: state.message,
+            });
+
+            resetForm();
+        };
+
+        if (state?.info) {
+            Toast.fire({
+                icon: 'info',
+                title: state.info
+            });
+        };
+    }, [state]);
     return (
         <form
             className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm shadow rounded-lg p-2 mb-2'
@@ -163,18 +183,18 @@ export default function UserFormComponent() {
                         type='date'
                         value={formData.birthdate}
                         onChange={handleBirthdateChange}
-                        required
+                    // required
                     />
+                    {state?.errors?.birthdate && (
+                        <p className='text-red-500 text-xs pl-2'>
+                            {state.errors.birthdate}
+                        </p>
+                    )}
                 </div>
                 <div className='px-2 text-center'>
                     <p>{age}</p>
                     <p>anos</p>
                 </div>
-                {state?.errors?.building && (
-                    <p className='text-red-500 text-xs pl-2'>
-                        {state.errors.building}
-                    </p>
-                )}
             </div>
 
             <div className='flex flex-col'>
@@ -376,7 +396,7 @@ export default function UserFormComponent() {
                     <div className='flex flex-col'>
                         <label htmlFor='livingapartmentroom'>Apartamento/Sala</label>
                         <input
-                            className='mt-1 block w-full'
+                            className='border border-blue-300 rounded p-0.5'
                             id='livingapartmentroom'
                             name='livingapartmentroom'
                             value={formData.livingapartmentroom}
@@ -498,7 +518,7 @@ export default function UserFormComponent() {
             <div className='flex items-center pt-2 justify-center'>
                 <ButtonComponent
                     type='submit'
-                    disabled={pending || Object.keys(state?.errors || {}).length > 0}
+                    disabled={pending}
                 >
                     {pending
                         ? 'Registrando...'

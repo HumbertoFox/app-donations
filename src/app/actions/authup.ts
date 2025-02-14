@@ -72,7 +72,7 @@ export async function signUp(state: FormStateSignUp, formData: FormData) {
             data: {
                 cpf,
                 name,
-                birthdate
+                birthdate: `${birthdate}T00:00:00.000Z`
             }
         });
     } else {
@@ -83,7 +83,8 @@ export async function signUp(state: FormStateSignUp, formData: FormData) {
 
     const existingPhone = Prisma.phones.upsert({
         where: {
-            phone
+            phone,
+            email
         },
         update: {},
         create: {
