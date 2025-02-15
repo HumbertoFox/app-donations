@@ -1,15 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import {
+    useActionState,
+    useEffect,
+    useState
+} from 'react';
 import ButtonComponent from '@/components/button';
+import { vehicleUp } from '@/app/actions/vehicleup';
+import { Toast } from '@/app/ts/sweetAlert';
 
 export default function VehicleFormComponent() {
+    const [state, action, pending] = useActionState(vehicleUp, undefined);
     const [formData, setFormData] = useState({
         model: '',
         automaker: '',
         renavam: '',
         plate: '',
-        km: '',
+        km: ''
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,8 +26,39 @@ export default function VehicleFormComponent() {
             [name]: value,
         });
     };
+
+    const resetForm = () => {
+        setFormData({
+            model: '',
+            automaker: '',
+            renavam: '',
+            plate: '',
+            km: ''
+        });
+    };
+
+    useEffect(() => {
+        if (state?.message) {
+            Toast.fire({
+                icon: 'success',
+                title: state.message,
+            });
+
+            resetForm();
+        };
+
+        if (state?.info) {
+            Toast.fire({
+                icon: 'info',
+                title: state.info
+            });
+        };
+    }, [state]);
     return (
-        <form className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm shadow rounded-lg p-2 mb-2'>
+        <form
+            className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm shadow rounded-lg p-2 mb-2'
+            action={action}
+        >
             <div className='flex flex-col'>
                 <label htmlFor='model'>Modelo</label>
                 <input
@@ -31,6 +69,11 @@ export default function VehicleFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.model && (
+                    <p className='text-red-500 text-sm pl-2'>
+                        {state.errors.model}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -43,6 +86,11 @@ export default function VehicleFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.automaker && (
+                    <p className='text-red-500 text-sm pl-2'>
+                        {state.errors.automaker}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -55,6 +103,11 @@ export default function VehicleFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.renavam && (
+                    <p className='text-red-500 text-sm pl-2'>
+                        {state.errors.renavam}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -67,6 +120,11 @@ export default function VehicleFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.plate && (
+                    <p className='text-red-500 text-sm pl-2'>
+                        {state.errors.plate}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -82,8 +140,14 @@ export default function VehicleFormComponent() {
             </div>
 
             <div className='flex justify-around pt-2 duration-[400ms]'>
-                <ButtonComponent type='submit'>
-                    Cadastrar
+                <ButtonComponent
+                    type='submit'
+                    disabled={pending}
+                >
+                    {pending
+                        ? 'Cadastrando...'
+                        : 'Cadastrar'
+                    }
                 </ButtonComponent>
             </div>
         </form>

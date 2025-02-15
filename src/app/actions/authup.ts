@@ -49,7 +49,7 @@ export async function signUp(state: FormStateSignUp, formData: FormData) {
         livingapartmentroom,
         reference_point,
         password
-    } = validatedFields.data
+    } = validatedFields.data;
 
     const checkedCpf = getCheckedCpf(cpf);
 
@@ -77,7 +77,7 @@ export async function signUp(state: FormStateSignUp, formData: FormData) {
         });
     } else {
         return {
-            info: 'Dados já Cadastrados',
+            info: 'Dados já Cadastrados'
         };
     };
 
@@ -139,12 +139,12 @@ export async function signUp(state: FormStateSignUp, formData: FormData) {
             phone_id: (await existingPhone).id,
             email,
             address_id: existingAddress.id,
-            password: hashedPassword,
-        },
+            password: hashedPassword
+        }
     });
 
     return {
-        message: 'Dados Cadastrados com Sucesso!',
+        message: 'Dados Cadastrados com Sucesso!'
     };
 
 };

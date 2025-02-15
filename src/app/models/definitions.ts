@@ -98,6 +98,29 @@ export const signUpFormSchema = z.object({
         .trim(),
 });
 
+export const vehicleUpFormSchema = z.object({
+    model: z
+        .string()
+        .min(1, { message: 'Campo Obrigatório' })
+        .trim(),
+    automaker: z
+        .string()
+        .min(1, { message: 'Campo Obrigatório' })
+        .trim(),
+    renavam: z
+        .string()
+        .min(1, { message: 'Campo Obrigatório' })
+        .trim(),
+    plate: z
+        .string()
+        .min(1, { message: 'Campo Obrigatório' })
+        .trim(),
+    km: z
+        .string()
+        .min(1, { message: 'Campo Obrigatório' })
+        .trim(),
+});
+
 export const updatePasswordFormSchema = z.object({
     old_password: z
         .string()
