@@ -13,6 +13,7 @@ import { checkedZipCode } from '@/app/ts/viaCep';
 import { signUp } from '@/app/actions/authup';
 import { FormErrors } from '@/types/types';
 import { Toast } from '@/app/ts/sweetAlert';
+import { ZipCodeError } from '@/interfaces/interfaces';
 
 export default function UserFormComponent() {
     const [state, action, pending] = useActionState(signUp, undefined);
@@ -35,8 +36,9 @@ export default function UserFormComponent() {
         password: '',
         password_confirmation: ''
     });
-
-    const cpfRef = useRef<HTMLInputElement | null>(null);
+    const [zipCodeErrors, setZipCodeErrors] = useState<ZipCodeError>({
+        zipcode: null
+    });
     const zipCodeRef = useRef<HTMLInputElement | null>(null);
     const numberResidenceRef = useRef<HTMLInputElement | null>(null);
     const [age, setAge] = useState<number>(0);
@@ -55,7 +57,7 @@ export default function UserFormComponent() {
         checkedZipCode({
             element,
             setFormData,
-            errors,
+            setZipCodeErrors,
             zipCodeRef,
             numberResidenceRef
         });
@@ -164,7 +166,6 @@ export default function UserFormComponent() {
                     value={formData.cpf}
                     onChange={handleChange}
                     required
-                    ref={cpfRef}
                 />
                 {state?.errors?.cpf && (
                     <p className='text-red-500 text-xs pl-2'>
@@ -245,9 +246,9 @@ export default function UserFormComponent() {
                     required
                     ref={zipCodeRef}
                 />
-                {state?.errors?.zipcode && (
+                {zipCodeErrors.zipcode && (
                     <p className='text-red-500 text-xs pl-2'>
-                        {state.errors.zipcode}
+                        {zipCodeErrors.zipcode}
                     </p>
                 )}
             </div>

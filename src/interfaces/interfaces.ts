@@ -1,6 +1,9 @@
 import {
     ButtonHTMLAttributes,
+    ChangeEvent,
+    Dispatch,
     ReactNode,
+    RefObject,
     SetStateAction
 } from 'react';
 
@@ -21,32 +24,54 @@ export interface IconsProps {
     title?: string;
 };
 
-interface FormData {
+interface FormDataBase {
     name: string;
-    cpf: string;
-    birthdate: string;
     phone: string;
-    email: string;
     zipcode: string;
     street: string;
     district: string;
     city: string;
-    number_residence: string;
     type_residence: string;
+    number_residence: string;
     building: string;
     block: string;
     livingapartmentroom: string;
     reference_point: string;
+};
+
+interface FormDataHelper extends FormDataBase {
+    cpf: string;
+    birthdate: string;
+    email: string;
+};
+
+interface FormDataUser extends FormDataHelper {
     password: string;
     password_confirmation: string;
 };
 
+interface FormDataDriver extends FormDataHelper {
+    cnh: string;
+};
+
+interface FormDataDonor extends FormDataBase {
+    donorcode: string;
+    contact: string;
+    contact_other: string;
+    cnpj: string;
+    corporatename: string;
+};
+
+export interface ZipCodeError {
+    zipcode?: string | null;
+};
+
 export interface CheckedZipCodeProps {
-    element: React.ChangeEvent<HTMLInputElement>;
-    setFormData: React.Dispatch<SetStateAction<FormData>>;
-    errors: { [key: string]: string | null };
-    zipCodeRef: React.RefObject<HTMLInputElement | null>;
-    numberResidenceRef: React.RefObject<HTMLInputElement | null>;
+    element: ChangeEvent<HTMLInputElement>;
+    setFormData: Dispatch<SetStateAction<FormDataHelper | FormDataUser | FormDataDriver | FormDataDonor>>;
+    setZipCodeErrors: Dispatch<SetStateAction<ZipCodeError>>;
+    zipCodeRef: RefObject<HTMLInputElement | null>;
+    numberResidenceRef: RefObject<HTMLInputElement | null>;
 };
 
 export interface SessionPayload {

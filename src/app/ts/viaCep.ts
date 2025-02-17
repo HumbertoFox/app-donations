@@ -8,12 +8,12 @@ const viaCepApi = axios.create({
 export const checkedZipCode = async ({
     element,
     setFormData,
-    errors,
+    setZipCodeErrors,
     zipCodeRef,
     numberResidenceRef
 }: CheckedZipCodeProps) => {
     const clearZipCode = () => {
-        setFormData(prevData => ({
+        setFormData((prevData) => ({
             ...prevData,
             street: '',
             district: '',
@@ -27,7 +27,7 @@ export const checkedZipCode = async ({
 
     if (!zipcode) {
         clearZipCode();
-        errors.zipcode = 'Formato de CEP inválido!';
+        setZipCodeErrors({ zipcode: 'Formato de CEP inválido!' });
         return;
     };
 
@@ -36,25 +36,25 @@ export const checkedZipCode = async ({
             const { data } = await viaCepApi.get(`${zipcode}/json/`);
 
             if (data && !data.erro) {
-                setFormData(prevData => ({
+                setFormData((prevData) => ({
                     ...prevData,
                     street: data.logradouro,
                     district: data.bairro,
                     city: data.localidade,
                 }));
                 if (numberResidenceRef.current) numberResidenceRef.current.focus();
-                errors.zipcode = null;
+                setZipCodeErrors({ zipcode: null });
             } else {
                 clearZipCode();
-                errors.zipcode = 'CEP não encontrado!';
+                setZipCodeErrors({ zipcode: 'CEP não encontrado!' });
             };
         } else {
             clearZipCode();
-            errors.zipcode = 'Formato de CEP inválido!';
+            setZipCodeErrors({ zipcode: 'Formato de CEP inválido!' });
         };
     } catch (error) {
         console.error(error);
         clearZipCode();
-        errors.zipcode = 'Formato de CEP inválido ou não encontrado!';
+        setZipCodeErrors({ zipcode: 'Formato de CEP inválido ou não encontrado!' });
     };
 };

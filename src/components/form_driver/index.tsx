@@ -1,10 +1,20 @@
 'use client';
 
 import { calculateAge } from '@/app/ts/calcAge';
-import { useState } from 'react';
+import {
+    useActionState,
+    useEffect,
+    useRef,
+    useState
+} from 'react';
 import ButtonComponent from '@/components/button';
+import { driverUp } from '@/app/actions/driverup';
+import { Toast } from '@/app/ts/sweetAlert';
+import { checkedZipCode } from '@/app/ts/viaCep';
+import { ZipCodeError } from '@/interfaces/interfaces';
 
 export default function DriverFormComponent() {
+    const [state, action, pending] = useActionState(driverUp, undefined);
     const [formData, setFormData] = useState({
         name: '',
         cpf: '',
@@ -23,7 +33,27 @@ export default function DriverFormComponent() {
         livingapartmentroom: '',
         reference_point: ''
     });
+    const [zipCodeErrors, setZipCodeErrors] = useState<ZipCodeError>({
+        zipcode: null
+    });
+    const zipCodeRef = useRef<HTMLInputElement | null>(null);
+    const numberResidenceRef = useRef<HTMLInputElement | null>(null);
     const [age, setAge] = useState<number>(0);
+
+    const handleZipCodeChange = (element: React.ChangeEvent<HTMLInputElement>) => {
+        const newZipCode = element.target.value;
+        setFormData({
+            ...formData,
+            zipcode: newZipCode
+        });
+        checkedZipCode({
+            element,
+            setFormData,
+            setZipCodeErrors,
+            zipCodeRef,
+            numberResidenceRef
+        });
+    };
 
     const handleBirthdateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const birthdate = e.target.value;
@@ -43,8 +73,50 @@ export default function DriverFormComponent() {
         });
     };
 
+    const resetForm = () => {
+        setFormData({
+            name: '',
+            cpf: '',
+            cnh: '',
+            birthdate: '',
+            phone: '',
+            email: '',
+            zipcode: '',
+            street: '',
+            district: '',
+            city: '',
+            number_residence: '',
+            type_residence: 'house',
+            building: '',
+            block: '',
+            livingapartmentroom: '',
+            reference_point: ''
+        });
+        setAge(0);
+    };
+
+    useEffect(() => {
+        if (state?.message) {
+            Toast.fire({
+                icon: 'success',
+                title: state.message,
+            });
+
+            resetForm();
+        };
+
+        if (state?.info) {
+            Toast.fire({
+                icon: 'info',
+                title: state.info
+            });
+        };
+    }, [state]);
     return (
-        <form className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm shadow rounded-lg p-2 mb-2'>
+        <form
+            className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm shadow rounded-lg p-2 mb-2'
+            action={action}
+        >
             <div className='flex flex-col'>
                 <label htmlFor='name'>Nome</label>
                 <input
@@ -55,6 +127,11 @@ export default function DriverFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.name && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.name}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -68,6 +145,11 @@ export default function DriverFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.cpf && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.cpf}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -81,6 +163,11 @@ export default function DriverFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.cnh && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.cnh}
+                    </p>
+                )}
             </div>
 
             <div className='flex items-end'>
@@ -95,6 +182,11 @@ export default function DriverFormComponent() {
                         onChange={handleBirthdateChange}
                         required
                     />
+                    {state?.errors?.birthdate && (
+                        <p className='text-red-500 text-xs pl-2'>
+                            {state.errors.birthdate}
+                        </p>
+                    )}
                 </div>
                 <div className='px-2 text-center'>
                     <p>{age}</p>
@@ -113,6 +205,11 @@ export default function DriverFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.phone && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.phone}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -126,6 +223,11 @@ export default function DriverFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.email && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.email}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -137,8 +239,15 @@ export default function DriverFormComponent() {
                     type='number'
                     value={formData.zipcode}
                     onChange={handleChange}
+                    onBlur={handleZipCodeChange}
                     required
+                    ref={zipCodeRef}
                 />
+                {zipCodeErrors.zipcode && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {zipCodeErrors.zipcode}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -151,6 +260,11 @@ export default function DriverFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.street && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.street}
+                    </p>
+                )}
             </div>
 
             <div className='flex flex-col'>
@@ -175,6 +289,11 @@ export default function DriverFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.city && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.city}
+                    </p>
+                )}
             </div>
 
             <div className='flex gap-3 justify-center items-center text-center'>
@@ -213,7 +332,13 @@ export default function DriverFormComponent() {
                     value={formData.number_residence}
                     onChange={handleChange}
                     required
+                    ref={numberResidenceRef}
                 />
+                {state?.errors?.number_residence && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.number_residence}
+                    </p>
+                )}
             </div>
 
             {formData.type_residence === 'buildings' && (
@@ -229,6 +354,11 @@ export default function DriverFormComponent() {
                             onChange={handleChange}
                             required
                         />
+                        {state?.errors?.building && (
+                            <p className='text-red-500 text-xs pl-2'>
+                                {state.errors.building}
+                            </p>
+                        )}
                     </div>
 
                     <div className='flex flex-col'>
@@ -241,6 +371,11 @@ export default function DriverFormComponent() {
                             onChange={handleChange}
                             required
                         />
+                        {state?.errors?.block && (
+                            <p className='text-red-500 text-xs pl-2'>
+                                {state.errors.block}
+                            </p>
+                        )}
                     </div>
 
                     <div className='flex flex-col'>
@@ -253,6 +388,11 @@ export default function DriverFormComponent() {
                             onChange={handleChange}
                             required
                         />
+                        {state?.errors?.livingapartmentroom && (
+                            <p className='text-red-500 text-xs pl-2'>
+                                {state.errors.livingapartmentroom}
+                            </p>
+                        )}
                     </div>
                 </div>
             )}
@@ -267,11 +407,22 @@ export default function DriverFormComponent() {
                     onChange={handleChange}
                     required
                 />
+                {state?.errors?.reference_point && (
+                    <p className='text-red-500 text-xs pl-2'>
+                        {state.errors.reference_point}
+                    </p>
+                )}
             </div>
 
             <div className='flex justify-around pt-2 duration-[400ms]'>
-                <ButtonComponent type='submit'>
-                    Cadastrar
+                <ButtonComponent
+                    type='submit'
+                    disabled={pending}
+                >
+                    {pending
+                        ? 'Cadastrando...'
+                        : 'Cadastrar'
+                    }
                 </ButtonComponent>
             </div>
         </form>

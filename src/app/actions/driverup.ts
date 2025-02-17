@@ -1,15 +1,35 @@
 'use server';
 
-import { FormStateSignUp } from '@/types/types';
-import { signUpFormSchema } from '@/app/models/definitions';
-import * as bcrypt from 'bcryptjs';
+import { FormStateDriverUp } from '@/types/types';
+import { driverUpFormSchema } from '@/app/models/definitions';
 import { getCheckedCpf } from '@/app/ts/cpfValidation';
+import { openSessionToken } from '@/app/models/opentoken';
+import { cookies } from 'next/headers';
 import Prisma from '@/app/models/prismadb';
 
-export async function signUp(state: FormStateSignUp, formData: FormData) {
-    const validatedFields = signUpFormSchema.safeParse({
+export async function driverUp(state: FormStateDriverUp, formData: FormData) {
+    const sessionAuthToken = (await cookies()).get('sessionAuthToken')?.value;
+
+    if (!sessionAuthToken) {
+        return {
+            info: 'Token de sessão não encontrado'
+        };
+    };
+
+    const payload = await openSessionToken(sessionAuthToken);
+
+    if (!payload || !payload.sub) {
+        return {
+            info: 'ID de usuário não encontrado no token'
+        };
+    };
+
+    const user_id = Number(payload.sub);
+
+    const validatedFields = driverUpFormSchema.safeParse({
         name: formData.get('name') as string,
         cpf: formData.get('cpf') as string,
+        cnh: formData.get('cnh') as string,
         birthdate: formData.get('birthdate') as string,
         phone: formData.get('phone') as string,
         email: formData.get('email') as string,
@@ -23,7 +43,6 @@ export async function signUp(state: FormStateSignUp, formData: FormData) {
         block: formData.get('block') as string,
         livingapartmentroom: formData.get('livingapartmentroom') as string,
         reference_point: formData.get('reference_point') as string,
-        password: formData.get('password') as string
     });
 
     if (!validatedFields.success) {
@@ -35,6 +54,7 @@ export async function signUp(state: FormStateSignUp, formData: FormData) {
     const {
         name,
         cpf,
+        cnh,
         birthdate,
         phone,
         email,
@@ -47,8 +67,7 @@ export async function signUp(state: FormStateSignUp, formData: FormData) {
         building,
         block,
         livingapartmentroom,
-        reference_point,
-        password
+        reference_point
     } = validatedFields.data;
 
     const checkedCpf = getCheckedCpf(cpf);
@@ -59,24 +78,37 @@ export async function signUp(state: FormStateSignUp, formData: FormData) {
         };
     };
 
-    const hashedPassword = await bcrypt.hash(password, 12);
-
-    let existingCpf = await Prisma.cpfs.findFirst({
+    const cpfId = await Prisma.cpfs.upsert({
         where: {
             cpf
+        },
+        update: {},
+        create: {
+            cpf,
+            name,
+            birthdate: `${birthdate}T00:00:00.000Z`
+        },
+        select: {
+            id: true
         }
     });
 
-    if (!existingCpf) {
-        existingCpf = await Prisma.cpfs.create({
+    let existingCnh = await Prisma.cnhs.findFirst({
+        where: {
+            cnh,
+            cpf_id: cpfId.id
+        }
+    });
+
+    if (!existingCnh) {
+        existingCnh = await Prisma.cnhs.create({
             data: {
-                cpf,
-                name,
-                birthdate: `${birthdate}T00:00:00.000Z`
+                cnh,
+                cpf_id: cpfId.id
             }
         });
 
-        const existingPhone = await Prisma.phones.upsert({
+        const PhoneId = await Prisma.phones.upsert({
             where: {
                 phone,
                 email
@@ -85,10 +117,13 @@ export async function signUp(state: FormStateSignUp, formData: FormData) {
             create: {
                 phone,
                 email
+            },
+            select: {
+                id: true
             }
         });
 
-        const existingZipcode = await Prisma.zipcodes.upsert({
+        const zipCodeId = await Prisma.zipcodes.upsert({
             where: {
                 zipcode
             },
@@ -98,52 +133,58 @@ export async function signUp(state: FormStateSignUp, formData: FormData) {
                 city,
                 district,
                 street
+            },
+            select: {
+                id: true
             }
         });
 
-        let existingAddress = await Prisma.addresses.findFirst({
+        let addressId = await Prisma.addresses.findFirst({
             where: {
-                zipcode_id: existingZipcode.id,
+                zipcode_id: zipCodeId.id,
                 type_residence,
                 number_residence,
                 building,
                 block,
                 livingapartmentroom,
                 reference_point
+            },
+            select: {
+                id: true
             }
         });
 
-        if (!existingAddress) {
-            existingAddress = await Prisma.addresses.create({
+        if (!addressId) {
+            addressId = await Prisma.addresses.create({
                 data: {
-                    zipcode_id: existingZipcode.id,
+                    zipcode_id: zipCodeId.id,
                     type_residence,
                     number_residence,
                     building,
                     block,
                     livingapartmentroom,
                     reference_point
+                },
+                select: {
+                    id: true
                 }
             });
         };
 
-        await Prisma.users.create({
+        await Prisma.drivers.create({
             data: {
-                cpf_id: existingCpf.id,
-                name,
-                phone_id: existingPhone.id,
-                email,
-                address_id: existingAddress.id,
-                password: hashedPassword
+                cnh_id: existingCnh.id,
+                phone_id: PhoneId.id,
+                address_id: addressId.id,
+                user_id
             }
         });
-
         return {
-            message: 'Dados Cadastrados com Sucesso!'
+            message: 'Motorista Cadastrado com Sucesso!'
         };
     } else {
         return {
-            info: 'Dados já Cadastrados!'
+            info: 'CNH já Cadastrada!'
         };
     };
 };
