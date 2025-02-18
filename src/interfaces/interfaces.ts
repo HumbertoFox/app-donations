@@ -22,6 +22,51 @@ export interface IconsProps {
     icon: string | any;
     className?: string;
     title?: string;
+    'aria-label'?: string;
+    onMouseEnter?: () => void;
+    onMouseLeave?: () => void;
+};
+
+interface Zipcodes {
+    id: bigint;
+    zipcode: string;
+    district: string;
+    city: string;
+    street: string;
+};
+
+interface Addresses {
+    id: bigint;
+    zipcodes: Zipcodes;
+};
+
+interface Phones {
+    id: bigint;
+    phone: string;
+    contact: string | null;
+    contact_other: string | null;
+    email: string | null;
+};
+
+interface Donors {
+    id: bigint;
+    name: string;
+    phones: Phones;
+    addresses: Addresses;
+};
+
+export interface DonorsResponseProps {
+    data: Donors[];
+};
+
+interface Donations {
+    id: bigint;
+    donors: Donors;
+    created_at: Date | null;
+};
+
+export interface DonationsResponseProps {
+    data: Donations[];
 };
 
 interface FormDataBase {

@@ -1,8 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { donorUp } from '@/app/actions/donorup';
+import {
+    useActionState,
+    useRef,
+    useState
+} from 'react';
+import ButtonComponent from '@/components/button';
+import { checkedZipCode } from '@/app/ts/viaCep';
+import { ZipCodeError } from '@/interfaces/interfaces';
 
 export default function DonorFormComponent() {
+    const [state, action, pending] = useActionState(donorUp, undefined);
     const [formData, setFormData] = useState({
         donorcode: '',
         name: '',
@@ -22,6 +31,22 @@ export default function DonorFormComponent() {
         livingapartmentroom: '',
         reference_point: ''
     });
+    const [zipCodeErrors, setZipCodeErrors] = useState<ZipCodeError>({
+        zipcode: null
+    });
+    const zipCodeRef = useRef<HTMLInputElement | null>(null);
+    const numberResidenceRef = useRef<HTMLInputElement | null>(null);
+
+    const handleZipCodeChange = (element: React.ChangeEvent<HTMLInputElement>) => {
+        checkedZipCode({
+            element,
+            setFormData,
+            setZipCodeErrors,
+            zipCodeRef,
+            numberResidenceRef
+        });
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData({
@@ -30,9 +55,12 @@ export default function DonorFormComponent() {
         });
     };
     return (
-        <form className='w-full flex text-sm text-gray-600 pl-1 pb-1'>
+        <form
+            className='max-sm:w-[290px] text-sm text-gray-600 pl-1 pb-1'
+            action={action}
+        >
             <fieldset
-                className='flex gap-[5px] flex-wrap duration-[400ms]'
+                className='max-w-full flex flex-wrap gap-[5px] duration-[400ms]'
             >
                 <legend className='mx-auto py-1 duration-[400ms] drop-shadow-[1px_1px_0.5px_#AAF998]'>
                     Informações do Doador
@@ -68,6 +96,11 @@ export default function DonorFormComponent() {
                                 onChange={handleChange}
                                 required
                             />
+                            {state?.errors?.name && (
+                                <p className='text-red-500 text-xs pl-2'>
+                                    {state.errors.name}
+                                </p>
+                            )}
                         </div>
 
                         <div className='flex flex-col'>
@@ -84,6 +117,11 @@ export default function DonorFormComponent() {
                                 minLength={11}
                                 required
                             />
+                            {state?.errors?.phone && (
+                                <p className='text-red-500 text-xs pl-2'>
+                                    {state.errors.phone}
+                                </p>
+                            )}
                         </div>
 
                         <div className='flex flex-col'>
@@ -99,6 +137,11 @@ export default function DonorFormComponent() {
                                 onChange={handleChange}
                                 required
                             />
+                            {state?.errors?.contact && (
+                                <p className='text-red-500 text-xs pl-2'>
+                                    {state.errors.contact}
+                                </p>
+                            )}
                         </div>
 
                         <div className='flex flex-col'>
@@ -113,6 +156,11 @@ export default function DonorFormComponent() {
                                 value={formData.contact_other}
                                 onChange={handleChange}
                             />
+                            {state?.errors?.contact_other && (
+                                <p className='text-red-500 text-xs pl-2'>
+                                    {state.errors.contact_other}
+                                </p>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -183,9 +231,19 @@ export default function DonorFormComponent() {
                         <input
                             className='border border-blue-300 rounded p-0.5'
                             id='zipcode'
+                            name='zipcode'
                             type='number'
+                            value={formData.zipcode}
+                            onChange={handleChange}
+                            onBlur={handleZipCodeChange}
                             required
+                            ref={zipCodeRef}
                         />
+                        {zipCodeErrors.zipcode && (
+                            <p className='text-red-500 text-xs pl-2'>
+                                {zipCodeErrors.zipcode}
+                            </p>
+                        )}
                     </div>
 
                     <div className='flex flex-col'>
@@ -195,9 +253,17 @@ export default function DonorFormComponent() {
                         <input
                             className='border border-blue-300 rounded p-0.5'
                             id='street'
+                            name='street'
                             type='text'
+                            value={formData.street}
+                            onChange={handleChange}
                             required
                         />
+                        {state?.errors?.street && (
+                            <p className='text-red-500 text-xs pl-2'>
+                                {state.errors.street}
+                            </p>
+                        )}
                     </div>
 
                     <div className='flex flex-col'>
@@ -207,9 +273,17 @@ export default function DonorFormComponent() {
                         <input
                             className='border border-blue-300 rounded p-0.5'
                             id='district'
+                            name='district'
                             type='text'
+                            value={formData.district}
+                            onChange={handleChange}
                             required
                         />
+                        {state?.errors?.district && (
+                            <p className='text-red-500 text-xs pl-2'>
+                                {state.errors.district}
+                            </p>
+                        )}
                     </div>
 
                     <div className='flex flex-col'>
@@ -219,9 +293,17 @@ export default function DonorFormComponent() {
                         <input
                             className='border border-blue-300 rounded p-0.5'
                             id='city'
+                            name='city'
                             type='text'
+                            value={formData.city}
+                            onChange={handleChange}
                             required
                         />
+                        {state?.errors?.city && (
+                            <p className='text-red-500 text-xs pl-2'>
+                                {state.errors.city}
+                            </p>
+                        )}
                     </div>
 
                     <div className='flex flex-col'>
@@ -231,9 +313,18 @@ export default function DonorFormComponent() {
                         <input
                             className='border border-blue-300 rounded p-0.5'
                             id='number_residence'
+                            name='number_residence'
                             type='text'
+                            value={formData.number_residence}
+                            onChange={handleChange}
                             required
+                            ref={numberResidenceRef}
                         />
+                        {state?.errors?.number_residence && (
+                            <p className='text-red-500 text-xs pl-2'>
+                                {state.errors.number_residence}
+                            </p>
+                        )}
                     </div>
 
                     {formData.type_residence !== 'house' && (
@@ -251,6 +342,11 @@ export default function DonorFormComponent() {
                                     onChange={handleChange}
                                     required
                                 />
+                                {state?.errors?.building && (
+                                    <p className='text-red-500 text-xs pl-2'>
+                                        {state.errors.building}
+                                    </p>
+                                )}
                             </div>
 
                             <div className='flex flex-col'>
@@ -266,6 +362,11 @@ export default function DonorFormComponent() {
                                     onChange={handleChange}
                                     required
                                 />
+                                {state?.errors?.block && (
+                                    <p className='text-red-500 text-xs pl-2'>
+                                        {state.errors.block}
+                                    </p>
+                                )}
                             </div>
 
                             <div className='flex flex-col'>
@@ -281,6 +382,11 @@ export default function DonorFormComponent() {
                                     onChange={handleChange}
                                     required
                                 />
+                                {state?.errors?.livingapartmentroom && (
+                                    <p className='text-red-500 text-xs pl-2'>
+                                        {state.errors.livingapartmentroom}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     )}
@@ -297,6 +403,11 @@ export default function DonorFormComponent() {
                             onChange={handleChange}
                             required
                         />
+                        {state?.errors?.reference_point && (
+                            <p className='text-red-500 text-xs pl-2'>
+                                {state.errors.reference_point}
+                            </p>
+                        )}
                     </div>
                 </div>
 
@@ -316,6 +427,11 @@ export default function DonorFormComponent() {
                                     onChange={handleChange}
                                     required
                                 />
+                                {state?.errors?.cnpj && (
+                                    <p className='text-red-500 text-xs pl-2'>
+                                        {state.errors.cnpj}
+                                    </p>
+                                )}
                             </div>
 
                             <div className='flex flex-col'>
@@ -331,11 +447,28 @@ export default function DonorFormComponent() {
                                     onChange={handleChange}
                                     required
                                 />
+                                {state?.errors?.corporatename && (
+                                    <p className='text-red-500 text-xs pl-2'>
+                                        {state.errors.corporatename}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>
                 )}
             </fieldset>
+            <div className='flex justify-center p-2'>
+                <ButtonComponent
+                    type='submit'
+                    title='Cadastrar Doador'
+                    disabled={pending}
+                >
+                    {pending
+                        ? 'Cadastrando...'
+                        : 'Cadastrar'
+                    }
+                </ButtonComponent>
+            </div>
         </form >
     );
 }

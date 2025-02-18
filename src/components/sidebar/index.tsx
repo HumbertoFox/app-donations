@@ -9,14 +9,14 @@ import ApplicationLogo from '@/components/logo';
 const classLinks = 'flex items-center p-2.5 gap-[15px] duration-500 text-black hover:bg-[#79D1FF] hover:text-white ease-in-out';
 
 const menuItems = [
-    { title: 'Cadastrar Doação', icon: 'fa-solid fa-pen-to-square', route: '/donations/registerdonation' },
-    { title: 'Cadastrar Doador', icon: 'fa-solid fa-user-plus', route: '/donors/registerdonor' },
-    { title: 'Editar Doação', icon: 'fa-regular fa-pen-to-square', route: '/donations/editdonation' },
-    { title: 'Editar Doador', icon: 'fa-solid fa-user-pen', route: '/donors/editdonor' },
-    { title: 'Agendar Coleta', icon: 'fa-solid fa-file-circle-plus', route: '/menu/record' },
-    { title: 'Confirmar Coleta', icon: 'fa-solid fa-file-circle-check', route: '/menu/confirmed' },
-    { title: 'Relatório', icon: 'fa-solid fa-file-lines', route: '/menu/report' },
-    { title: 'Agenda', icon: 'fa-solid fa-calendar-days', route: '/menu/agenda' }
+    { title: 'Cadastrar Doação', icon: 'fa-solid fa-pen-to-square', active: '/donations/registerdonation', route: '/donors' },
+    { title: 'Cadastrar Doador', icon: 'fa-solid fa-user-plus', active: '/donors/registerdonor', route: '/donors/registerdonor' },
+    { title: 'Editar Doação', icon: 'fa-regular fa-pen-to-square', active: '/donations/editdonation', route: '/donations' },
+    { title: 'Editar Doador', icon: 'fa-solid fa-user-pen', active: '/donors/editdonor', route: '/donors' },
+    { title: 'Agendar Coleta', icon: 'fa-solid fa-file-circle-plus', active: '/menu/record', route: '/menu/record' },
+    { title: 'Confirmar Coleta', icon: 'fa-solid fa-file-circle-check', active: '/menu/confirmed', route: '/menu/confirmed' },
+    { title: 'Relatório', icon: 'fa-solid fa-file-lines', active: '/menu/report', route: '/menu/report' },
+    { title: 'Agenda', icon: 'fa-solid fa-calendar-days', active: '/menu/agenda', route: '/menu/agenda' }
 ];
 
 export default function SidebarComponent() {
@@ -37,13 +37,13 @@ export default function SidebarComponent() {
 
                 <ul>
 
-                    {menuItems.map(({ title, icon, route }, index) => (
+                    {menuItems.map(({ title, icon, active, route }, index) => (
                         <li
                             key={index}
                             title={title}
                         >
                             <Link
-                                className={`${classLinks} ${pathname === route && 'bg-[#79D1FF] text-black hover:text-white'}`}
+                                className={`${classLinks} ${pathname === active && 'bg-[#79D1FF] text-black hover:text-white'}`}
                                 href={route}
                                 aria-label={title}
                                 role='menuitem'

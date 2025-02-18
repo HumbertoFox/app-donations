@@ -40,11 +40,6 @@ export default function HelperFormComponent() {
     const [age, setAge] = useState<number>(0);
 
     const handleZipCodeChange = (element: React.ChangeEvent<HTMLInputElement>) => {
-        const newZipCode = element.target.value;
-        setFormData({
-            ...formData,
-            zipcode: newZipCode
-        });
         checkedZipCode({
             element,
             setFormData,

@@ -49,11 +49,6 @@ export default function UserFormComponent() {
     const togglePasswordConfirmVisibility = () => setIsVisibledPasswordConfirm(!isVisibledPasswordConfirm);
 
     const handleZipCodeChange = (element: React.ChangeEvent<HTMLInputElement>) => {
-        const newZipCode = element.target.value;
-        setFormData({
-            ...formData,
-            zipcode: newZipCode
-        });
         checkedZipCode({
             element,
             setFormData,
@@ -184,7 +179,7 @@ export default function UserFormComponent() {
                         type='date'
                         value={formData.birthdate}
                         onChange={handleBirthdateChange}
-                    // required
+                        required
                     />
                     {state?.errors?.birthdate && (
                         <p className='text-red-500 text-xs pl-2'>

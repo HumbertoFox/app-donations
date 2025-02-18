@@ -1,4 +1,8 @@
-export function daysSince(date: string | Date): number {
+export function daysSince(date: string | Date | null): number {
+    if (date === null) {
+        throw new Error('Invalid date: null value');
+    };
+
     const createdAt = new Date(date);
     const now = new Date();
     
