@@ -66,7 +66,7 @@ export default function DonorFormComponent() {
                     Informações do Doador
                 </legend>
                 <div className='w-[280px]'>
-                    <div className='p-1 border-2 rounded'>
+                    <div className='p-1 border-2 bg-white rounded'>
                         <div className='flex flex-col'>
                             <label htmlFor='donorcode'>
                                 Código do Doador
@@ -166,7 +166,7 @@ export default function DonorFormComponent() {
                 </div>
 
                 <div className='w-[280px]'>
-                    <div className='flex gap-5 justify-center p-1 border-2 rounded'>
+                    <div className='flex gap-5 justify-center bg-white p-1 border-2 rounded'>
                         <div className='flex flex-col'>
                             <input
                                 className='cursor-pointer'
@@ -223,7 +223,7 @@ export default function DonorFormComponent() {
                     </div>
                 </div>
 
-                <div className='p-1 w-[280px] border-2 rounded'>
+                <div className='p-1 w-[280px] bg-white border-2 rounded'>
                     <div className='flex flex-col'>
                         <label htmlFor='zipcode'>
                             CEP
@@ -413,7 +413,7 @@ export default function DonorFormComponent() {
 
                 {formData.type_residence === 'enterprise' && (
                     <div className='w-[280px]'>
-                        <div className='p-1 border-2 rounded'>
+                        <div className='bg-white p-1 border-2 rounded'>
                             <div className='flex flex-col'>
                                 <label htmlFor='cnpj'>
                                     CNPJ

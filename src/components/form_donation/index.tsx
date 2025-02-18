@@ -92,7 +92,7 @@ export default function DonationFormComponent() {
         };
     };
     return (
-        <form className='max-w-full flex flex-col p-1 text-sm duration-[400ms]'>
+        <form className='max-w-full flex flex-col p-1 text-sm bg-white duration-[400ms]'>
             <fieldset className='max-w-full flex flex-col gap-[5px] duration-[400ms]'>
                 <legend className='mx-auto py-1 duration-[400ms] drop-shadow-[1px_1px_0.5px_#AAF998]'>Informações da Doação</legend>
 

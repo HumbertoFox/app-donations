@@ -114,7 +114,7 @@ export default function DriverFormComponent() {
     }, [state]);
     return (
         <form
-            className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm shadow rounded-lg p-2 mb-2'
+            className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm bg-white shadow rounded-lg p-2 mb-2'
             action={action}
         >
             <div className='flex flex-col'>
