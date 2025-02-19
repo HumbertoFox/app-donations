@@ -1,4 +1,9 @@
-import { CheckedZipCodeProps } from '@/interfaces/interfaces';
+import {
+    CheckedZipCodeDonorProps,
+    CheckedZipCodeDriverProps,
+    CheckedZipCodeHelperProps,
+    CheckedZipCodeUserProps
+} from '@/interfaces/interfaces';
 import axios from 'axios';
 
 const viaCepApi = axios.create({
@@ -11,9 +16,13 @@ export const checkedZipCode = async ({
     setZipCodeErrors,
     zipCodeRef,
     numberResidenceRef
-}: CheckedZipCodeProps) => {
+}: CheckedZipCodeHelperProps
+    | CheckedZipCodeUserProps
+    | CheckedZipCodeDriverProps
+    | CheckedZipCodeDonorProps) => {
     const clearZipCode = () => {
-        setFormData((prevData) => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setFormData((prevData: any) => ({
             ...prevData,
             street: '',
             district: '',
@@ -36,7 +45,8 @@ export const checkedZipCode = async ({
             const { data } = await viaCepApi.get(`${zipcode}/json/`);
 
             if (data && !data.erro) {
-                setFormData((prevData) => ({
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                setFormData((prevData: any) => ({
                     ...prevData,
                     street: data.logradouro,
                     district: data.bairro,

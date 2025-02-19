@@ -1,4 +1,3 @@
-import { cpfs } from '@prisma/client';
 import {
     ButtonHTMLAttributes,
     ChangeEvent,
@@ -107,7 +106,7 @@ export interface DriversResponseProps {
 
 interface Helper {
     id: bigint;
-    cpfs: cpfs;
+    cpfs: Cpfs;
 };
 
 export interface HelpersResponseProps {
@@ -156,12 +155,27 @@ export interface ZipCodeError {
     zipcode?: string | null;
 };
 
-export interface CheckedZipCodeProps {
+interface CheckedZipCodeProps {
     element: ChangeEvent<HTMLInputElement>;
-    setFormData: Dispatch<SetStateAction<FormDataHelper | FormDataUser | FormDataDriver | FormDataDonor>>;
     setZipCodeErrors: Dispatch<SetStateAction<ZipCodeError>>;
     zipCodeRef: RefObject<HTMLInputElement | null>;
     numberResidenceRef: RefObject<HTMLInputElement | null>;
+};
+
+export interface CheckedZipCodeHelperProps extends CheckedZipCodeProps {
+    setFormData: Dispatch<SetStateAction<FormDataHelper>>;
+};
+
+export interface CheckedZipCodeUserProps extends CheckedZipCodeProps {
+    setFormData: Dispatch<SetStateAction<FormDataUser>>;
+};
+
+export interface CheckedZipCodeDriverProps extends CheckedZipCodeProps {
+    setFormData: Dispatch<SetStateAction<FormDataDriver>>;
+};
+
+export interface CheckedZipCodeDonorProps extends CheckedZipCodeProps {
+    setFormData: Dispatch<SetStateAction<FormDataDonor>>;
 };
 
 export interface SessionPayload {

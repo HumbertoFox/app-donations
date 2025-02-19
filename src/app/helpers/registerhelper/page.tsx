@@ -12,8 +12,8 @@ export default function HelperRegisterPage() {
 
                 <nav className='text-sm text-gray-500 dark:text-gray-400'>
                     <Link
-                        href={'/menu'}
                         className='hover:text-gray-700 dark:text-gray-300 duration-300'
+                        href='/menu'
                     >
                         Menu
                     </Link>
@@ -21,8 +21,8 @@ export default function HelperRegisterPage() {
                     <span className='mx-1'>/</span>
 
                     <Link
-                        href={'/helpers'}
                         className='hover:text-gray-700 dark:text-gray-300 duration-300'
+                        href='/helpers'
                     >
                         Ajudantes
                     </Link>

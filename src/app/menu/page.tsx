@@ -17,9 +17,9 @@ export default function MenuComponent() {
     return (
         <div className='max-w-screen-2xl h-dvh max-md:h-full flex flex-col max-md:flex-col-reverse justify-start items-start pl-[200px] max-[1080px]:pl-[70px] duration-500 ease-in-out'>
             <div className='w-full h-full flex justify-center p-1'>
-                <div className='max-w-7xl h-full flex justify-center items-center flex-wrap gap-20 sm:px-6 lg:px-8'>
-                    <div className='bg-white overflow-hidden shadow-sm sm:rounded-lg'>
-                        <nav className='flex flex-wrap justify-center items-center gap-8 p-8 text-gray-900'>
+                <div className='w-full h-full flex justify-center items-center flex-wrap gap-20'>
+                    <div className='w-full bg-white overflow-hidden shadow-sm sm:rounded-lg'>
+                        <nav className='flex flex-wrap justify-center items-center gap-8 py-12 px-3 text-gray-900'>
                             {linksItems.map(({
                                 route,
                                 icon,
@@ -43,10 +43,10 @@ export default function MenuComponent() {
                 </div>
             </div>
 
-            <div className='mx-auto max-w-7xl sm:px-6 lg:px-8'>
+            <div className='w-full p-1'>
                 <div className='overflow-hidden bg-white shadow-sm sm:rounded-lg'>
-                    <div className='p-6 text-gray-900'>
-                        Você está logado!
+                    <div className='text-gray-900 text-center p-6'>
+                        Você está Conectado!
                     </div>
                 </div>
             </div>
