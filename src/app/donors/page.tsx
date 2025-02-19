@@ -15,11 +15,12 @@ import { DonorsResponseProps } from '@/interfaces/interfaces';
 export default function DonorsPage() {
     const [donors, setDonors] = useState<DonorsResponseProps | null>(null);
     const [hoveredIcon, setHoveredIcon] = useState<Record<string, boolean>>({});
+    const [loading, setLoading] = useState<boolean>(true);
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
         zipcode: '',
-        district: '',
+        district: ''
     });
 
     const handleMouseEnter = (id: string | bigint, action: string) => setHoveredIcon((prev) => ({ ...prev, [`${id}-${action}`]: true }));
@@ -37,6 +38,7 @@ export default function DonorsPage() {
         const fetchDonors = async () => {
             const response = await getDonors();
             setDonors(response);
+            setLoading(false);
         };
 
         fetchDonors();
@@ -99,68 +101,74 @@ export default function DonorsPage() {
                     Lista de Doadores
                 </h2>
                 <div className='bg-white p-4 shadow sm:rounded-lg'>
-                    <table className='w-full text-center'>
-                        <thead>
-                            <tr className='border-b-[1px] border-gray-600 cursor-default'>
-                                <th>Nº</th>
-                                <th>Cód.</th>
-                                <th>Nome</th>
-                                <th>Telefone</th>
-                                <th>CEP</th>
-                                <th>Bairro</th>
-                                <th>Ação</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {donors?.data?.length === 0 && (
-                                <tr className='text-red-600'>
-                                    <td colSpan={7}>
-                                        Não Existe Doador Cadastrada
-                                    </td>
+                    {loading ? (
+                        <div className='flex justify-center items-center py-10'>
+                            <div className='animate-spin rounded-full border-t-4 border-blue-500 h-10 w-10'></div>
+                        </div>
+                    ) : (
+                        <table className='w-full text-center'>
+                            <thead>
+                                <tr className='border-b-[1px] border-gray-600 cursor-default'>
+                                    <th>Nº</th>
+                                    <th>Cód.</th>
+                                    <th>Nome</th>
+                                    <th>Telefone</th>
+                                    <th>CEP</th>
+                                    <th>Bairro</th>
+                                    <th>Ação</th>
                                 </tr>
-                            )}
-                            {donors?.data?.map((donor, index) => (
-                                <tr key={index} className='border-b-[1px] border-gray-400'>
-                                    <td className='border-r-[1px] border-gray-400'>
-                                        {index + 1}
-                                    </td>
-                                    <td>{donor.id}</td>
-                                    <td>{donor.name}</td>
-                                    <td>{formatPhone(donor.phones.phone)}</td>
-                                    <td>{formatCep(donor.addresses.zipcodes.zipcode)}</td>
-                                    <td>{donor.addresses.zipcodes.district}</td>
-                                    <td className='flex justify-evenly items-center gap-2 my-1'>
-                                        <Link href={`/donor/${donor.id}/edit`}>
-                                            <Icons
-                                                icon={hoveredIcon[`${donor.id}-edit`]
-                                                    ? 'fa-solid fa-user-pen'
-                                                    : 'fa-solid fa-user-gear'
-                                                }
-                                                title={`Editar ${donor.name}`}
-                                                aria-label={`Editar ${donor.name}`}
-                                                className='text-[25px] text-[blue] duration-500 cursor-pointer hover:text-orange-600'
-                                                onMouseEnter={() => handleMouseEnter(donor.id, 'edit')}
-                                                onMouseLeave={() => handleMouseLeave(donor.id, 'edit')}
-                                            />
-                                        </Link>
-                                        <Link href={`/donation/${donor.id}/register`}>
-                                            <Icons
-                                                icon={hoveredIcon[`${donor.id}-show`]
-                                                    ? 'fa-solid fa-person-circle-check'
-                                                    : 'fa-solid fa-person-circle-question'
-                                                }
-                                                title={`Doação de ${donor.name}`}
-                                                aria-label={`Doação de ${donor.name}`}
-                                                className='text-[25px] text-[blue] duration-500 cursor-pointer hover:text-green-600'
-                                                onMouseEnter={() => handleMouseEnter(donor.id, 'show')}
-                                                onMouseLeave={() => handleMouseLeave(donor.id, 'show')}
-                                            />
-                                        </Link>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {donors?.data?.length === 0 && (
+                                    <tr className='text-red-600'>
+                                        <td colSpan={7}>
+                                            Não Existe Doador Cadastrada
+                                        </td>
+                                    </tr>
+                                )}
+                                {donors?.data?.map((donor, index) => (
+                                    <tr key={index} className='border-b-[1px] border-gray-400'>
+                                        <td className='border-r-[1px] border-gray-400'>
+                                            {index + 1}
+                                        </td>
+                                        <td>{donor.id}</td>
+                                        <td>{donor.name}</td>
+                                        <td>{formatPhone(donor.phones.phone)}</td>
+                                        <td>{formatCep(donor.addresses.zipcodes.zipcode)}</td>
+                                        <td>{donor.addresses.zipcodes.district}</td>
+                                        <td className='flex justify-evenly items-center gap-2 my-1'>
+                                            <Link href={`/donor/${donor.id}/edit`}>
+                                                <Icons
+                                                    icon={hoveredIcon[`${donor.id}-edit`]
+                                                        ? 'fa-solid fa-user-pen'
+                                                        : 'fa-solid fa-user-gear'
+                                                    }
+                                                    title={`Editar ${donor.name}`}
+                                                    aria-label={`Editar ${donor.name}`}
+                                                    className='text-[25px] text-[blue] duration-500 cursor-pointer hover:text-orange-600'
+                                                    onMouseEnter={() => handleMouseEnter(donor.id, 'edit')}
+                                                    onMouseLeave={() => handleMouseLeave(donor.id, 'edit')}
+                                                />
+                                            </Link>
+                                            <Link href={`/donation/${donor.id}/register`}>
+                                                <Icons
+                                                    icon={hoveredIcon[`${donor.id}-show`]
+                                                        ? 'fa-solid fa-person-circle-check'
+                                                        : 'fa-solid fa-person-circle-question'
+                                                    }
+                                                    title={`Doação de ${donor.name}`}
+                                                    aria-label={`Doação de ${donor.name}`}
+                                                    className='text-[25px] text-[blue] duration-500 cursor-pointer hover:text-green-600'
+                                                    onMouseEnter={() => handleMouseEnter(donor.id, 'show')}
+                                                    onMouseLeave={() => handleMouseLeave(donor.id, 'show')}
+                                                />
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             </div>
         </div>

@@ -1,3 +1,4 @@
+import { cpfs } from '@prisma/client';
 import {
     ButtonHTMLAttributes,
     ChangeEvent,
@@ -67,6 +68,50 @@ interface Donations {
 
 export interface DonationsResponseProps {
     data: Donations[];
+};
+
+interface Vehicle {
+    id: bigint;
+    renavam: string;
+    plate: string;
+    km: string;
+    model: string;
+    automaker: string;
+};
+
+export interface VehiclesResponseProps {
+    data: Vehicle[];
+};
+
+interface Cpfs {
+    id: bigint;
+    cpf: string;
+    name: string;
+    birthdate: Date;
+}
+
+interface Cnhs {
+    id: bigint;
+    cnh: string;
+    cpfs: Cpfs;
+};
+
+interface Driver {
+    id: bigint;
+    cnhs: Cnhs;
+};
+
+export interface DriversResponseProps {
+    data: Driver[];
+};
+
+interface Helper {
+    id: bigint;
+    cpfs: cpfs;
+};
+
+export interface HelpersResponseProps {
+    data: Helper[];
 };
 
 interface FormDataBase {
