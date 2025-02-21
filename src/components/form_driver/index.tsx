@@ -13,9 +13,12 @@ import { Toast } from '@/app/ts/sweetAlert';
 import { checkedZipCode } from '@/app/ts/viaCep';
 import { ZipCodeError } from '@/interfaces/interfaces';
 import { DriverFormComponentProps } from '@/types/types';
+import { useRouter } from 'next/navigation';
+import { driverUpdate } from '@/app/actions/driverupdate';
 
 export default function DriverFormComponent({ driver, valueButton }: DriverFormComponentProps) {
-    const [state, action, pending] = useActionState(driverUp, undefined);
+    const [state, action, pending] = useActionState(valueButton === 'Editar' ? driverUpdate : driverUp, undefined);
+    const route = useRouter();
     const [formData, setFormData] = useState({
         name: driver?.cnhs?.cpfs?.name ?? '',
         cpf: driver?.cnhs?.cpfs?.cpf ?? '',
@@ -98,7 +101,14 @@ export default function DriverFormComponent({ driver, valueButton }: DriverFormC
                 title: state.message,
             });
 
-            resetForm();
+            if (valueButton === 'Cadastrar') {
+                resetForm();
+                route.push('/drivers');
+            };
+
+            if (valueButton === 'Editar') {
+                route.refresh();
+            };
         };
 
         if (state?.info) {
@@ -107,7 +117,7 @@ export default function DriverFormComponent({ driver, valueButton }: DriverFormC
                 title: state.info
             });
         };
-    }, [state]);
+    }, [state, valueButton, route]);
     return (
         <form
             className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm bg-white shadow rounded-lg p-2 mb-2'
@@ -116,12 +126,13 @@ export default function DriverFormComponent({ driver, valueButton }: DriverFormC
             <div className='flex flex-col'>
                 <label htmlFor='name'>Nome</label>
                 <input
-                    className='border border-blue-300 rounded p-0.5'
+                    className={`w-full border border-blue-300 rounded p-0.5 ${valueButton === 'Editar' ? 'cursor-not-allowed' : ''}`}
                     id='name'
                     name='name'
                     value={formData.name}
                     onChange={handleChange}
                     required
+                    readOnly={valueButton === 'Editar' ? true : false}
                 />
                 {state?.errors?.name && (
                     <p className='text-red-500 text-xs pl-2'>
@@ -133,13 +144,14 @@ export default function DriverFormComponent({ driver, valueButton }: DriverFormC
             <div className='flex flex-col'>
                 <label htmlFor='cpf'>CPF</label>
                 <input
-                    className='border border-blue-300 rounded p-0.5'
+                    className={`w-full border border-blue-300 rounded p-0.5 ${valueButton === 'Editar' ? 'cursor-not-allowed' : ''}`}
                     id='cpf'
                     name='cpf'
                     type='number'
                     value={formData.cpf}
                     onChange={handleChange}
                     required
+                    readOnly={valueButton === 'Editar' ? true : false}
                 />
                 {state?.errors?.cpf && (
                     <p className='text-red-500 text-xs pl-2'>
@@ -151,13 +163,14 @@ export default function DriverFormComponent({ driver, valueButton }: DriverFormC
             <div className='flex flex-col'>
                 <label htmlFor='cnh'>CNH</label>
                 <input
-                    className='border border-blue-300 rounded p-0.5'
+                    className={`w-full border border-blue-300 rounded p-0.5 ${valueButton === 'Editar' ? 'cursor-not-allowed' : ''}`}
                     id='cnh'
                     name='cnh'
                     type='number'
                     value={formData.cnh}
                     onChange={handleChange}
                     required
+                    readOnly={valueButton === 'Editar' ? true : false}
                 />
                 {state?.errors?.cnh && (
                     <p className='text-red-500 text-xs pl-2'>
@@ -170,13 +183,14 @@ export default function DriverFormComponent({ driver, valueButton }: DriverFormC
                 <div className='w-full'>
                     <label htmlFor='birthdate'>Data de Nascimento</label>
                     <input
-                        className='w-full border border-blue-300 rounded p-0.5'
+                        className={`w-full border border-blue-300 rounded p-0.5 ${valueButton === 'Editar' ? 'cursor-not-allowed' : ''}`}
                         id='birthdate'
                         name='birthdate'
                         type='date'
                         value={formData.birthdate}
                         onChange={handleBirthdateChange}
                         required
+                        readOnly={valueButton === 'Editar' ? true : false}
                     />
                     {state?.errors?.birthdate && (
                         <p className='text-red-500 text-xs pl-2'>

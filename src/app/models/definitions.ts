@@ -14,7 +14,7 @@ export const signUpFormSchema = z.object({
     name: z
         .string()
         .min(10, { message: 'O nome deve ter pelo menos 10 letras.' })
-        .regex(/^[a-zA-Z\s]+$/, { message: 'O nome deve conter apenas letras e espaços.' })
+        .regex(/^[a-zA-Zá-úÁ-Úã-õÕçÇ\s]+$/, { message: 'O nome deve conter apenas letras e espaços.' })
         .trim(),
     cpf: z
         .string()
@@ -102,7 +102,7 @@ export const vehicleUpFormSchema = z.object({
     model: z
         .string()
         .min(1, { message: 'Campo Obrigatório. ' })
-        .regex(/^[A-Z\s]+$/, { message: 'O modelo deve conter apenas letras maiúsculas.' })
+        .regex(/^[a-zA-Zá-úÁ-Úã-õÕçÇ\s]+$/, { message: 'O modelo deve conter apenas letras maiúsculas.' })
         .trim(),
     automaker: z
         .string()
@@ -131,7 +131,7 @@ export const driverUpFormSchema = z.object({
     name: z
         .string()
         .min(10, { message: 'O nome deve ter pelo menos 10 letras.' })
-        .regex(/^[a-zA-Z\s]+$/, { message: 'O nome deve conter apenas letras e espaços.' })
+        .regex(/^[a-zA-Zá-úÁ-Úã-õÕçÇ\s]+$/, { message: 'O nome deve conter apenas letras e espaços.' })
         .trim(),
     cpf: z
         .string()
@@ -217,7 +217,7 @@ export const helperUpFormSchema = z.object({
     name: z
         .string()
         .min(10, { message: 'O nome deve ter pelo menos 10 letras.' })
-        .regex(/^[a-zA-Z\s]+$/, { message: 'O nome deve conter apenas letras e espaços.' })
+        .regex(/^[a-zA-Zá-úÁ-Úã-õÕçÇ\s]+$/, { message: 'O nome deve conter apenas letras e espaços.' })
         .trim(),
     cpf: z
         .string()
@@ -298,7 +298,7 @@ export const donorUpFormSchema = z.object({
     name: z
         .string()
         .min(5, { message: 'O nome deve ter pelo menos 5 letras. ' })
-        .regex(/^[a-zA-Z\s]+$/, { message: 'O nome deve conter apenas letras e espaços.' })
+        .regex(/^[a-zA-Zá-úÁ-Úã-õÕçÇ\s]+$/, { message: 'O nome deve conter apenas letras e espaços.' })
         .trim(),
     phone: z
         .string()

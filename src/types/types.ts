@@ -172,3 +172,40 @@ export type DriverFormComponentProps = {
     driver: Driver | null;
     valueButton: string;
 };
+
+export type Helper = {
+    cpfs?: {
+        name?: string;
+        cpf?: string;
+        birthdate?: string;
+    };
+    phones?: {
+        phone?: string;
+        email?: string | null;
+    };
+    addresses?: {
+        number_residence?: string;
+        type_residence?: string;
+        building?: string | null;
+        block?: string | null;
+        livingapartmentroom?: string | null;
+        reference_point?: string;
+        zipcodes?: {
+            zipcode?: string;
+            street?: string;
+            district?: string;
+            city?: string;
+        };
+    };
+};
+
+export type HelperResponse = {
+    data?: Helper;
+    info?: string;
+    error?: string;
+};
+
+export type HelperFormComponentProps = {
+    helper: Helper | null;
+    valueButton: string;
+};

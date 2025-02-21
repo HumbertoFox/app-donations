@@ -103,10 +103,11 @@ export async function helperUp(state: FormStateHelperUp, formData: FormData) {
     if (!helperId) {
         const phoneId = await Prisma.phones.upsert({
             where: {
-                phone,
+                phone
+            },
+            update: {
                 email
             },
-            update: {},
             create: {
                 phone,
                 email

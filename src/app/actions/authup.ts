@@ -78,10 +78,11 @@ export async function signUp(state: FormStateSignUp, formData: FormData) {
 
         const existingPhone = await Prisma.phones.upsert({
             where: {
-                phone,
+                phone
+            },
+            update: {
                 email
             },
-            update: {},
             create: {
                 phone,
                 email

@@ -78,12 +78,8 @@ export async function driverUpdate(state: FormStateDriverUp, formData: FormData)
         };
     };
 
-    const cpfId = await Prisma.cpfs.upsert({
+    const cpfId = await Prisma.cpfs.findFirst({
         where: {
-            cpf
-        },
-        update: {},
-        create: {
             cpf,
             name,
             birthdate: `${birthdate}T00:00:00.000Z`
@@ -93,27 +89,34 @@ export async function driverUpdate(state: FormStateDriverUp, formData: FormData)
         }
     });
 
-    let existingCnh = await Prisma.cnhs.findFirst({
+    const cnhId = await Prisma.cnhs.findFirst({
         where: {
             cnh,
-            cpf_id: cpfId.id
+            cpf_id: cpfId!.id
+        },
+        select: {
+            id: true
         }
     });
 
-    if (!existingCnh) {
-        existingCnh = await Prisma.cnhs.create({
-            data: {
-                cnh,
-                cpf_id: cpfId.id
-            }
-        });
+    const driverId = await Prisma.drivers.findFirst({
+        where: {
+            cnh_id: cnhId?.id
+        },
+        select: {
+            id: true
+        }
+    });
 
+    if (driverId) {
         const PhoneId = await Prisma.phones.upsert({
             where: {
+                phone
+            },
+            update: {
                 phone,
                 email
             },
-            update: {},
             create: {
                 phone,
                 email
@@ -127,7 +130,12 @@ export async function driverUpdate(state: FormStateDriverUp, formData: FormData)
             where: {
                 zipcode
             },
-            update: {},
+            update: {
+                zipcode,
+                city,
+                district,
+                street
+            },
             create: {
                 zipcode,
                 city,
@@ -171,20 +179,22 @@ export async function driverUpdate(state: FormStateDriverUp, formData: FormData)
             });
         };
 
-        await Prisma.drivers.create({
+        await Prisma.drivers.update({
+            where: {
+                id: driverId.id
+            },
             data: {
-                cnh_id: existingCnh.id,
                 phone_id: PhoneId.id,
                 address_id: addressId.id,
                 user_id
             }
         });
         return {
-            message: 'Motorista Cadastrado com Sucesso!'
+            message: 'Motorista Editado com Sucesso!'
         };
     } else {
         return {
-            info: 'CNH já Cadastrada!'
+            info: 'Motorista não encontrado!'
         };
     };
 };

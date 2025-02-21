@@ -18,7 +18,10 @@ export async function signIn(state: FormStateSignIn, formData: FormData) {
         };
     };
 
-    const { email, password } = validatedFields.data
+    const {
+        email,
+        password
+    } = validatedFields.data
 
     const existingUser = await Prisma.users.findFirst({
         where: {

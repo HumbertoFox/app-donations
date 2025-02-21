@@ -80,7 +80,7 @@ export default function HelpersPage() {
                                         <td>{formatCpf(helper.cpfs.cpf)}</td>
                                         <td>{helper.cpfs.name}</td>
                                         <td className='flex justify-center items-center gap-3 my-1'>
-                                            <Link href={`/helper/${helper.id}/edit`}>
+                                            <Link href={`/helpers/edithelper/?id=${helper.id}`}>
                                                 <Icons
                                                     icon={hoveredIcon[`${helper.id}-edit`]
                                                         ? 'fa-solid fa-id-card'

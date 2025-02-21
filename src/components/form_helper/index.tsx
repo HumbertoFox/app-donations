@@ -12,25 +12,29 @@ import { checkedZipCode } from '@/app/ts/viaCep';
 import { ZipCodeError } from '@/interfaces/interfaces';
 import { helperUp } from '@/app/actions/helperup';
 import { Toast } from '@/app/ts/sweetAlert';
+import { HelperFormComponentProps } from '@/types/types';
+import { helperUpdate } from '@/app/actions/helperupdate';
+import { useRouter } from 'next/navigation';
 
-export default function HelperFormComponent() {
-    const [state, action, pending] = useActionState(helperUp, undefined);
+export default function HelperFormComponent({ helper, valueButton }: HelperFormComponentProps) {
+    const [state, action, pending] = useActionState(valueButton === 'Editar' ? helperUpdate : helperUp, undefined);
+    const route = useRouter();
     const [formData, setFormData] = useState({
-        name: '',
-        cpf: '',
-        birthdate: '',
-        phone: '',
-        email: '',
-        zipcode: '',
-        street: '',
-        district: '',
-        city: '',
-        number_residence: '',
-        type_residence: 'house',
-        building: '',
-        block: '',
-        livingapartmentroom: '',
-        reference_point: '',
+        name: helper?.cpfs?.name ?? '',
+        cpf: helper?.cpfs?.cpf ?? '',
+        birthdate: helper?.cpfs?.birthdate ?? '',
+        phone: helper?.phones?.phone ?? '',
+        email: helper?.phones?.email ?? '',
+        zipcode: helper?.addresses?.zipcodes?.zipcode ?? '',
+        street: helper?.addresses?.zipcodes?.street ?? '',
+        district: helper?.addresses?.zipcodes?.district ?? '',
+        city: helper?.addresses?.zipcodes?.city ?? '',
+        number_residence: helper?.addresses?.number_residence ?? '',
+        type_residence: helper?.addresses?.type_residence ?? 'house',
+        building: helper?.addresses?.building ?? '',
+        block: helper?.addresses?.block ?? '',
+        livingapartmentroom: helper?.addresses?.livingapartmentroom ?? '',
+        reference_point: helper?.addresses?.reference_point ?? '',
     });
     const [zipCodeErrors, setZipCodeErrors] = useState<ZipCodeError>({
         zipcode: null
@@ -95,7 +99,14 @@ export default function HelperFormComponent() {
                 title: state.message,
             });
 
-            resetForm();
+            if (valueButton === 'Cadastrar') {
+                resetForm();
+                route.push('/helpers');
+            };
+
+            if (valueButton === 'Editar') {
+                route.refresh();
+            };
         };
 
         if (state?.info) {
@@ -104,7 +115,7 @@ export default function HelperFormComponent() {
                 title: state.info
             });
         };
-    }, [state]);
+    }, [state, valueButton, route]);
     return (
         <form
             className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm bg-white shadow rounded-lg p-2 mb-2'
@@ -115,12 +126,13 @@ export default function HelperFormComponent() {
                     Nome
                 </label>
                 <input
-                    className='border border-blue-300 rounded p-0.5'
+                    className={`w-full border border-blue-300 rounded p-0.5 ${valueButton === 'Editar' ? 'cursor-not-allowed' : ''}`}
                     id='name'
                     name='name'
                     value={formData.name}
                     onChange={handleChange}
                     required
+                    readOnly={valueButton === 'Editar' ? true : false}
                 />
                 {state?.errors?.name && (
                     <p className='text-red-500 text-xs pl-2'>
@@ -134,13 +146,14 @@ export default function HelperFormComponent() {
                     CPF
                 </label>
                 <input
-                    className='border border-blue-300 rounded p-0.5'
+                    className={`w-full border border-blue-300 rounded p-0.5 ${valueButton === 'Editar' ? 'cursor-not-allowed' : ''}`}
                     id='cpf'
                     name='cpf'
                     type='number'
                     value={formData.cpf}
                     onChange={handleChange}
                     required
+                    readOnly={valueButton === 'Editar' ? true : false}
                 />
                 {state?.errors?.cpf && (
                     <p className='text-red-500 text-xs pl-2'>
@@ -155,13 +168,14 @@ export default function HelperFormComponent() {
                         Data de Nascimento
                     </label>
                     <input
-                        className='w-full border border-blue-300 rounded p-0.5'
+                        className={`w-full border border-blue-300 rounded p-0.5 ${valueButton === 'Editar' ? 'cursor-not-allowed' : ''}`}
                         id='birthdate'
                         name='birthdate'
                         type='date'
                         value={formData.birthdate}
                         onChange={handleBirthdateChange}
                         required
+                        readOnly={valueButton === 'Editar' ? true : false}
                     />
                     {state?.errors?.birthdate && (
                         <p className='text-red-500 text-xs pl-2'>
@@ -367,7 +381,7 @@ export default function HelperFormComponent() {
                             Bloco
                         </label>
                         <input
-                            className='mt-1 block w-full'
+                            className='border border-blue-300 rounded p-0.5'
                             id='block'
                             name='block'
                             value={formData.block}
@@ -386,10 +400,10 @@ export default function HelperFormComponent() {
                             Apartamento/Sala
                         </label>
                         <input
+                            className='border border-blue-300 rounded p-0.5'
                             id='livingapartmentroom'
                             name='livingapartmentroom'
                             value={formData.livingapartmentroom}
-                            className='mt-1 block w-full'
                             onChange={handleChange}
                             required
                         />
@@ -427,8 +441,10 @@ export default function HelperFormComponent() {
                     disabled={pending}
                 >
                     {pending
-                        ? 'Cadastrando...'
-                        : 'Cadastrar'
+                        ? `${valueButton === 'Cadastrar'
+                            ? 'Cadastrando...'
+                            : 'Editando'}`
+                        : `${valueButton}`
                     }
                 </ButtonComponent>
             </div>

@@ -1,13 +1,13 @@
 'use server';
 
-import { FormStateDriverUp } from '@/types/types';
-import { driverUpFormSchema } from '@/app/models/definitions';
+import { FormStateHelperUp } from '@/types/types';
+import { helperUpFormSchema } from '@/app/models/definitions';
 import { getCheckedCpf } from '@/app/ts/cpfValidation';
 import { openSessionToken } from '@/app/models/opentoken';
 import { cookies } from 'next/headers';
 import Prisma from '@/app/models/prismadb';
 
-export async function driverUp(state: FormStateDriverUp, formData: FormData) {
+export async function helperUpdate(state: FormStateHelperUp, formData: FormData) {
     const sessionAuthToken = (await cookies()).get('sessionAuthToken')?.value;
 
     if (!sessionAuthToken) {
@@ -26,10 +26,9 @@ export async function driverUp(state: FormStateDriverUp, formData: FormData) {
 
     const user_id = BigInt(payload.sub);
 
-    const validatedFields = driverUpFormSchema.safeParse({
+    const validatedFields = helperUpFormSchema.safeParse({
         name: formData.get('name') as string,
         cpf: formData.get('cpf') as string,
-        cnh: formData.get('cnh') as string,
         birthdate: formData.get('birthdate') as string,
         phone: formData.get('phone') as string,
         email: formData.get('email') as string,
@@ -54,7 +53,6 @@ export async function driverUp(state: FormStateDriverUp, formData: FormData) {
     const {
         name,
         cpf,
-        cnh,
         birthdate,
         phone,
         email,
@@ -78,12 +76,8 @@ export async function driverUp(state: FormStateDriverUp, formData: FormData) {
         };
     };
 
-    const cpfId = await Prisma.cpfs.upsert({
+    const cpfId = await Prisma.cpfs.findFirst({
         where: {
-            cpf
-        },
-        update: {},
-        create: {
             cpf,
             name,
             birthdate: `${birthdate}T00:00:00.000Z`
@@ -93,25 +87,22 @@ export async function driverUp(state: FormStateDriverUp, formData: FormData) {
         }
     });
 
-    let existingCnh = await Prisma.cnhs.findFirst({
+    const helperId = await Prisma.helpers.findFirst({
         where: {
-            cnh
+            cpf_id: cpfId!.id
+        },
+        select: {
+            id: true
         }
     });
 
-    if (!existingCnh) {
-        existingCnh = await Prisma.cnhs.create({
-            data: {
-                cnh,
-                cpf_id: cpfId.id
-            }
-        });
-
-        const PhoneId = await Prisma.phones.upsert({
+    if (helperId) {
+        const phoneId = await Prisma.phones.upsert({
             where: {
                 phone
             },
             update: {
+                phone,
                 email
             },
             create: {
@@ -127,7 +118,12 @@ export async function driverUp(state: FormStateDriverUp, formData: FormData) {
             where: {
                 zipcode
             },
-            update: {},
+            update: {
+                zipcode,
+                city,
+                district,
+                street
+            },
             create: {
                 zipcode,
                 city,
@@ -171,20 +167,23 @@ export async function driverUp(state: FormStateDriverUp, formData: FormData) {
             });
         };
 
-        await Prisma.drivers.create({
+        await Prisma.helpers.update({
+            where: {
+                id: helperId.id
+            },
             data: {
-                cnh_id: existingCnh.id,
-                phone_id: PhoneId.id,
+                phone_id: phoneId.id,
                 address_id: addressId.id,
                 user_id
             }
         });
+
         return {
-            message: 'Motorista Cadastrado com Sucesso!'
+            message: 'Ajudante Editado com Sucesso!'
         };
     } else {
         return {
-            info: 'CNH já Cadastrada!'
+            info: 'Ajudante não encontrado!'
         };
     };
 };
