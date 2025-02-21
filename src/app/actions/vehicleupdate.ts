@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 import { openSessionToken } from '@/app/models/opentoken';
 import Prisma from '@/app/models/prismadb';
 
-export async function vehicleUp(state: FormStateVehicleUp, formData: FormData) {
+export async function vehicleUpdate(state: FormStateVehicleUp, formData: FormData) {
     const sessionAuthToken = (await cookies()).get('sessionAuthToken')?.value;
 
     if (!sessionAuthToken) {
@@ -44,38 +44,37 @@ export async function vehicleUp(state: FormStateVehicleUp, formData: FormData) {
         automaker,
         renavam,
         plate,
-        km
     } = validatedFields.data;
 
     const modelUpcase = model.toUpperCase();
     const automakerUpcase = automaker.toUpperCase();
     const plateUpcase = plate.toUpperCase();
 
-    const existingVehicle = await Prisma.vehicles.findUnique({
+    const vehicleId = await Prisma.vehicles.findUnique({
         where: {
-            renavam,
-            plate
+            renavam
         }
     });
 
-    if (!existingVehicle) {
-        await Prisma.vehicles.create({
+    if (vehicleId?.renavam === renavam) {
+        await Prisma.vehicles.update({
+            where: {
+                renavam
+            },
             data: {
                 model: modelUpcase,
                 automaker: automakerUpcase,
-                renavam,
                 plate: plateUpcase,
-                km,
                 user_id
             }
         });
 
         return {
-            message: 'Veículo Cadastrado com Sucesso.'
+            message: 'Veículo Editado com Sucesso.'
         };
     };
 
     return {
-        info: 'Dados Já Cadastrados!'
+        info: 'Dados Não Coincidem!'
     };
 };

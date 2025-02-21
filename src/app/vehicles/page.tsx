@@ -85,7 +85,7 @@ export default function VehiclesPage() {
                                         <td>{vehicle.model}</td>
                                         <td>{vehicle.automaker}</td>
                                         <td className='flex justify-center items-center gap-3 my-1'>
-                                            <Link href={`/vehicle/${vehicle.id}/edit`}>
+                                            <Link href={`/vehicles/editvehicle/?id=${vehicle.id}`}>
                                                 <Icons
                                                     icon={hoveredIcon[`${vehicle.id}-edit`]
                                                         ? 'fa-solid fa-truck'

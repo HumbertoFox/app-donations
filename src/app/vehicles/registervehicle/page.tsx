@@ -37,7 +37,10 @@ export default function VehicleRegisterPage() {
                     className='text-[45px] text-[blue] p-2'
                     icon='fa-solid fa-truck-medical'
                 />
-                <VehicleFormComponent />
+                <VehicleFormComponent
+                    vehicle={null}
+                    valueButton='Cadastrar'
+                />
             </div>
         </div>
     );

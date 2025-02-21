@@ -23,7 +23,7 @@ export async function donorUp(state: FormStateDonorUp, formData: FormData) {
         };
     };
 
-    const user_id = Number(payload.sub);
+    const user_id = BigInt(payload.sub);
 
     const validatedFields = donorUpFormSchema.safeParse({
         name: formData.get('name') as string,

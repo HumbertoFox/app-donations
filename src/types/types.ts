@@ -113,3 +113,62 @@ export type FormStateDonorUp =
 export type FormErrors = {
     [key: string]: string;
 };
+
+export type Vehicle = {
+    renavam?: string;
+    plate?: string;
+    km?: string;
+    model?: string;
+    automaker?: string;
+};
+
+export type VehicleResponse = {
+    data?: Vehicle;
+    info?: string;
+    error?: string;
+};
+
+export type VehicleFormComponentProps = {
+    vehicle: Vehicle | null;
+    valueButton: string;
+};
+
+export type Driver = {
+    cnhs?: {
+        cnh?: string;
+        cpfs?: {
+            name?: string;
+            cpf?: string;
+            birthdate?: string;
+        };
+    };
+    phones?: {
+        phone?: string;
+        email?: string | null;
+    };
+    addresses?: {
+        number_residence?: string;
+        type_residence?: string;
+        building?: string | null;
+        block?: string | null;
+        livingapartmentroom?: string | null;
+        reference_point?: string;
+        zipcodes?: {
+            zipcode?: string;
+            street?: string;
+            district?: string;
+            city?: string;
+        };
+    };
+};
+
+export type DriverResponse = {
+    data?: Driver;
+    info?: string;
+    error?: string;
+};
+
+export type DriverFormComponentProps = {
+    driver: Driver | null;
+    valueButton: string;
+};

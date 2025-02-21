@@ -101,23 +101,29 @@ export const signUpFormSchema = z.object({
 export const vehicleUpFormSchema = z.object({
     model: z
         .string()
-        .min(1, { message: 'Campo Obrigatório' })
+        .min(1, { message: 'Campo Obrigatório. ' })
+        .regex(/^[A-Z\s]+$/, { message: 'O modelo deve conter apenas letras maiúsculas.' })
         .trim(),
     automaker: z
         .string()
-        .min(1, { message: 'Campo Obrigatório' })
+        .min(1, { message: 'Campo Obrigatório.' })
         .trim(),
     renavam: z
         .string()
-        .min(1, { message: 'Campo Obrigatório' })
+        .min(11, { message: 'O RENAVAM deve ter 11 números. ' })
+        .max(11, { message: 'O RENAVAM deve ter 11 números. ' })
+        .regex(/^\d{11}$/, { message: 'Deve conter apenas números.' })
         .trim(),
     plate: z
         .string()
-        .min(1, { message: 'Campo Obrigatório' })
+        .min(7, { message: 'A Placa deve conter 7 Caracteres. ' })
+        .max(7, { message: 'A Placa deve conter 7 Caracteres. ' })
+        .regex(/[A-Z].*[A-Z].*[A-Z]/, { message: 'A Placa deve conter pelo menos 3 letras maiúsculas.' })
         .trim(),
     km: z
         .string()
-        .min(1, { message: 'Campo Obrigatório' })
+        .min(1, { message: 'Campo Obrigatório. ' })
+        .regex(/^\d+$/, { message: 'Deve conter apenas números.' })
         .trim(),
 });
 
@@ -291,29 +297,29 @@ export const helperUpFormSchema = z.object({
 export const donorUpFormSchema = z.object({
     name: z
         .string()
-        .min(5, { message: 'O nome deve ter pelo menos 5 letras.' })
+        .min(5, { message: 'O nome deve ter pelo menos 5 letras. ' })
         .regex(/^[a-zA-Z\s]+$/, { message: 'O nome deve conter apenas letras e espaços.' })
         .trim(),
     phone: z
         .string()
-        .min(8, { message: 'O telefone deve ter pelo menos 8 números.' })
+        .min(8, { message: 'O telefone deve ter pelo menos 8 números. ' })
         .regex(/^\d+$/, { message: 'O telefone deve conter apenas números.' })
         .trim(),
     contact: z
         .string()
-        .min(8, { message: 'O telefone deve ter pelo menos 8 números.' })
+        .min(8, { message: 'O telefone deve ter pelo menos 8 números. ' })
         .regex(/^\d+$/, { message: 'O telefone deve conter apenas números.' })
         .trim(),
     contact_other: z
         .string()
-        .min(8, { message: 'O telefone deve ter pelo menos 8 números.' })
+        .min(8, { message: 'O telefone deve ter pelo menos 8 números. ' })
         .regex(/^\d+$/, { message: 'O telefone deve conter apenas números.' })
         .trim()
         .nullable(),
     zipcode: z
         .string()
-        .min(8, { message: 'O CEP deve ter 8 Números.' })
-        .max(8, { message: 'O CEP deve ter 8 Números.' })
+        .min(8, { message: 'O CEP deve ter 8 Números. ' })
+        .max(8, { message: 'O CEP deve ter 8 Números. ' })
         .regex(/^\d{8}$/, { message: 'O CEP deve conter apenas números.' })
         .trim(),
     street: z
@@ -334,8 +340,8 @@ export const donorUpFormSchema = z.object({
         .trim(),
     cnpj: z
         .string()
-        .min(14, { message: 'O JNPJ deve ter 14 números.' })
-        .max(14, {message: 'O JNPJ deve ter 14 números.'})
+        .min(14, { message: 'O JNPJ deve ter 14 números. ' })
+        .max(14, { message: 'O JNPJ deve ter 14 números. ' })
         .regex(/^\d{14}$/, { message: 'O CNPJ deve conter apenas números.' })
         .trim(),
     corporatename: z

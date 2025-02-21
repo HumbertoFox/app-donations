@@ -24,7 +24,7 @@ export async function helperUp(state: FormStateHelperUp, formData: FormData) {
         };
     };
 
-    const user_id = Number(payload.sub);
+    const user_id = BigInt(payload.sub);
 
     const validatedFields = helperUpFormSchema.safeParse({
         name: formData.get('name') as string,

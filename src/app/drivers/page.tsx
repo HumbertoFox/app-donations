@@ -82,7 +82,7 @@ export default function DriversPage() {
                                         <td>{formatCpf(driver.cnhs.cpfs.cpf)}</td>
                                         <td>{driver.cnhs.cpfs.name}</td>
                                         <td className='flex justify-center items-center gap-3 my-1'>
-                                            <Link href={`/driver/${driver.id}/edit`}>
+                                            <Link href={`/drivers/editdriver/?id=${driver.id}`}>
                                                 <Icons
                                                     icon={hoveredIcon[`${driver.id}-edit`]
                                                         ? 'fa-solid fa-address-card'

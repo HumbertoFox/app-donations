@@ -12,26 +12,27 @@ import { driverUp } from '@/app/actions/driverup';
 import { Toast } from '@/app/ts/sweetAlert';
 import { checkedZipCode } from '@/app/ts/viaCep';
 import { ZipCodeError } from '@/interfaces/interfaces';
+import { DriverFormComponentProps } from '@/types/types';
 
-export default function DriverFormComponent() {
+export default function DriverFormComponent({ driver, valueButton }: DriverFormComponentProps) {
     const [state, action, pending] = useActionState(driverUp, undefined);
     const [formData, setFormData] = useState({
-        name: '',
-        cpf: '',
-        cnh: '',
-        birthdate: '',
-        phone: '',
-        email: '',
-        zipcode: '',
-        street: '',
-        district: '',
-        city: '',
-        number_residence: '',
-        type_residence: 'house',
-        building: '',
-        block: '',
-        livingapartmentroom: '',
-        reference_point: ''
+        name: driver?.cnhs?.cpfs?.name ?? '',
+        cpf: driver?.cnhs?.cpfs?.cpf ?? '',
+        cnh: driver?.cnhs?.cnh ?? '',
+        birthdate: driver?.cnhs?.cpfs?.birthdate ?? '',
+        phone: driver?.phones?.phone ?? '',
+        email: driver?.phones?.email ?? '',
+        zipcode: driver?.addresses?.zipcodes?.zipcode ?? '',
+        street: driver?.addresses?.zipcodes?.street ?? '',
+        district: driver?.addresses?.zipcodes?.district ?? '',
+        city: driver?.addresses?.zipcodes?.city ?? '',
+        number_residence: driver?.addresses?.number_residence ?? '',
+        type_residence: driver?.addresses?.type_residence ?? 'house',
+        building: driver?.addresses?.building ?? '',
+        block: driver?.addresses?.block ?? '',
+        livingapartmentroom: driver?.addresses?.livingapartmentroom ?? '',
+        reference_point: driver?.addresses?.reference_point ?? ''
     });
     const [zipCodeErrors, setZipCodeErrors] = useState<ZipCodeError>({
         zipcode: null
@@ -415,8 +416,8 @@ export default function DriverFormComponent() {
                     disabled={pending}
                 >
                     {pending
-                        ? 'Cadastrando...'
-                        : 'Cadastrar'
+                        ? `${valueButton === 'Editar' ? 'Editando...' : 'Cadastrando...'}`
+                        : `${valueButton}`
                     }
                 </ButtonComponent>
             </div>

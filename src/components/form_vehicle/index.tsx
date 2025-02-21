@@ -8,15 +8,17 @@ import {
 import ButtonComponent from '@/components/button';
 import { vehicleUp } from '@/app/actions/vehicleup';
 import { Toast } from '@/app/ts/sweetAlert';
+import { VehicleFormComponentProps } from '@/types/types';
+import { vehicleUpdate } from '@/app/actions/vehicleupdate';
 
-export default function VehicleFormComponent() {
-    const [state, action, pending] = useActionState(vehicleUp, undefined);
+export default function VehicleFormComponent({ vehicle, valueButton }: VehicleFormComponentProps) {
+    const [state, action, pending] = useActionState(valueButton === 'Editar' ? vehicleUpdate : vehicleUp, undefined);
     const [formData, setFormData] = useState({
-        model: '',
-        automaker: '',
-        renavam: '',
-        plate: '',
-        km: ''
+        renavam: vehicle?.renavam ?? '',
+        plate: vehicle?.plate ?? '',
+        km: vehicle?.km ?? '',
+        model: vehicle?.model ?? '',
+        automaker: vehicle?.automaker ?? ''
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +64,7 @@ export default function VehicleFormComponent() {
             <div className='flex flex-col'>
                 <label htmlFor='model'>Modelo</label>
                 <input
-                    className='w-full uppercase border border-blue-300 rounded p-0.5'
+                    className='w-full border border-blue-300 rounded p-0.5'
                     id='model'
                     name='model'
                     value={formData.model}
@@ -79,7 +81,7 @@ export default function VehicleFormComponent() {
             <div className='flex flex-col'>
                 <label htmlFor='automaker'>Montadora</label>
                 <input
-                    className='w-full uppercase border border-blue-300 rounded p-0.5'
+                    className='w-full border border-blue-300 rounded p-0.5'
                     id='automaker'
                     name='automaker'
                     value={formData.automaker}
@@ -96,11 +98,12 @@ export default function VehicleFormComponent() {
             <div className='flex flex-col'>
                 <label htmlFor='renavam'>Renavam</label>
                 <input
-                    className='w-full border border-blue-300 rounded p-0.5'
+                    className={`w-full border border-blue-300 rounded p-0.5 ${valueButton === 'Editar' ? 'cursor-no-drop' : ''}`}
                     id='renavam'
                     name='renavam'
                     value={formData.renavam}
                     onChange={handleChange}
+                    readOnly={valueButton === 'Editar' ? true : false}
                     required
                 />
                 {state?.errors?.renavam && (
@@ -113,7 +116,7 @@ export default function VehicleFormComponent() {
             <div className='flex flex-col'>
                 <label htmlFor='plate'>Placa</label>
                 <input
-                    className='w-full uppercase border border-blue-300 rounded p-0.5'
+                    className='w-full border border-blue-300 rounded p-0.5'
                     id='plate'
                     name='plate'
                     value={formData.plate}
@@ -130,11 +133,12 @@ export default function VehicleFormComponent() {
             <div className='flex flex-col'>
                 <label htmlFor='km'>Km</label>
                 <input
-                    className='w-full border border-blue-300 rounded p-0.5'
+                    className={`w-full border border-blue-300 rounded p-0.5 ${valueButton === 'Editar' ? 'cursor-no-drop' : ''}`}
                     id='km'
                     name='km'
                     value={formData.km}
                     onChange={handleChange}
+                    readOnly={valueButton === 'Editar' ? true : false}
                     required
                 />
             </div>
@@ -145,8 +149,10 @@ export default function VehicleFormComponent() {
                     disabled={pending}
                 >
                     {pending
-                        ? 'Cadastrando...'
-                        : 'Cadastrar'
+                        ? `${valueButton === 'Cadastrar'
+                            ? 'Cadastrando...'
+                            : 'Editando'}`
+                        : `${valueButton}`
                     }
                 </ButtonComponent>
             </div>

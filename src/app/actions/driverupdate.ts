@@ -7,7 +7,7 @@ import { openSessionToken } from '@/app/models/opentoken';
 import { cookies } from 'next/headers';
 import Prisma from '@/app/models/prismadb';
 
-export async function driverUp(state: FormStateDriverUp, formData: FormData) {
+export async function driverUpdate(state: FormStateDriverUp, formData: FormData) {
     const sessionAuthToken = (await cookies()).get('sessionAuthToken')?.value;
 
     if (!sessionAuthToken) {
