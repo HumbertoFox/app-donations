@@ -150,7 +150,7 @@ export default function DonorsPage() {
                                                     onMouseLeave={() => handleMouseLeave(donor.id, 'edit')}
                                                 />
                                             </Link>
-                                            <Link href={`/donation/${donor.id}/register`}>
+                                            <Link href={`/donations/registerdonation/?id=${donor.id}`}>
                                                 <Icons
                                                     icon={hoveredIcon[`${donor.id}-show`]
                                                         ? 'fa-solid fa-person-circle-check'

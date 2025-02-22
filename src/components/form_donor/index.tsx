@@ -3,6 +3,7 @@
 import { donorUp } from '@/app/actions/donorup';
 import {
     useActionState,
+    useEffect,
     useRef,
     useState
 } from 'react';
@@ -10,9 +11,13 @@ import ButtonComponent from '@/components/button';
 import { checkedZipCode } from '@/app/ts/viaCep';
 import { ZipCodeError } from '@/interfaces/interfaces';
 import { DonorFormComponentProps } from '@/types/types';
+import { donorUpdate } from '@/app/actions/donorupdate';
+import { Toast } from '@/app/ts/sweetAlert';
+import { useRouter } from 'next/navigation';
 
 export default function DonorFormComponent({ donor, valueButton }: DonorFormComponentProps) {
-    const [state, action, pending] = useActionState(donorUp, undefined);
+    const [state, action, pending] = useActionState(valueButton === 'Editar' ? donorUpdate : donorUp, undefined);
+    const router = useRouter();
     const [formData, setFormData] = useState({
         donorcode: donor?.id ?? '',
         name: donor?.name ?? '',
@@ -55,20 +60,74 @@ export default function DonorFormComponent({ donor, valueButton }: DonorFormComp
             [name]: value,
         });
     };
+
+    const resetForm = () => {
+        setFormData({
+            donorcode: '',
+            name: '',
+            phone: '',
+            contact: '',
+            contact_other: '',
+            zipcode: '',
+            street: '',
+            district: '',
+            city: '',
+            type_residence: 'house',
+            number_residence: '',
+            cnpj: '',
+            corporatename: '',
+            building: '',
+            block: '',
+            livingapartmentroom: '',
+            reference_point: ''
+        });
+    };
+
+    useEffect(() => {
+        if (state?.message) {
+            Toast.fire({
+                icon: 'success',
+                title: state.message,
+            });
+
+            if (valueButton === 'Cadastrar') {
+                resetForm();
+                router.push('/donors');
+            };
+
+            if (valueButton === 'Editar') {
+                router.refresh();
+
+                const timer = setTimeout(() => {
+                    router.push('/donors');
+                }, 3000);
+
+                return () => clearTimeout(timer);
+            };
+        };
+
+        if (state?.info) {
+            Toast.fire({
+                icon: 'info',
+                title: state.info
+            });
+        };
+    }, [state, valueButton, router]);
     return (
         <form
             className='max-sm:w-[290px] text-sm text-gray-600 pl-1 pb-1'
             action={action}
         >
             <fieldset
-                className='max-w-full flex flex-wrap gap-[5px] duration-[400ms]'
+                className={`max-w-full flex flex-wrap gap-[5px] duration-[400ms] ${valueButton === '' ? 'flex-col' : '' }`}
+                disabled={valueButton !== '' ? false : true}
             >
                 <legend className='mx-auto py-1 duration-[400ms] drop-shadow-[1px_1px_0.5px_#AAF998]'>
                     Informações do Doador
                 </legend>
                 <div className='w-[280px]'>
                     <div className='p-1 border-2 bg-white rounded'>
-                        {valueButton === 'Editar' && (
+                        {valueButton !== 'Cadastrar' && (
                             <div className='flex flex-col'>
                                 <label htmlFor='donorcode'>
                                     Código do Doador
@@ -460,21 +519,23 @@ export default function DonorFormComponent({ donor, valueButton }: DonorFormComp
                     </div>
                 )}
             </fieldset>
-            <div className='flex justify-center p-2'>
-                <ButtonComponent
-                    type='submit'
-                    title='Cadastrar Doador'
-                    disabled={pending}
-                >
-                    {pending
-                        ? `${valueButton === 'Editar'
-                            ? 'Editando...'
-                            : 'Cadastrando...'
-                        }`
-                        : `${valueButton}`
-                    }
-                </ButtonComponent>
-            </div>
+            {valueButton !== '' && (
+                <div className='flex justify-center p-2'>
+                    <ButtonComponent
+                        type='submit'
+                        title='Cadastrar Doador'
+                        disabled={pending}
+                    >
+                        {pending
+                            ? `${valueButton === 'Editar'
+                                ? 'Editando...'
+                                : 'Cadastrando...'
+                            }`
+                            : `${valueButton}`
+                        }
+                    </ButtonComponent>
+                </div>
+            )}
         </form >
     );
 }

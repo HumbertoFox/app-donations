@@ -90,6 +90,7 @@ export type FormStateVehicleUp =
 export type FormStateDonorUp =
     | {
         errors?: {
+            donorcode?: string[];
             name?: string[];
             phone?: string[];
             contact?: string[];
@@ -246,5 +247,11 @@ export type DonorResponse = {
 
 export type DonorFormComponentProps = {
     donor: Donor | null;
+    valueButton: string;
+};
+
+export type DonationFormComponentProps = {
+    donorid?: string | null;
+    donation: string | null;
     valueButton: string;
 };

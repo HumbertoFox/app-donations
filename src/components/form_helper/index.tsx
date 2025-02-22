@@ -18,7 +18,7 @@ import { useRouter } from 'next/navigation';
 
 export default function HelperFormComponent({ helper, valueButton }: HelperFormComponentProps) {
     const [state, action, pending] = useActionState(valueButton === 'Editar' ? helperUpdate : helperUp, undefined);
-    const route = useRouter();
+    const router = useRouter();
     const [formData, setFormData] = useState({
         name: helper?.cpfs?.name ?? '',
         cpf: helper?.cpfs?.cpf ?? '',
@@ -101,11 +101,17 @@ export default function HelperFormComponent({ helper, valueButton }: HelperFormC
 
             if (valueButton === 'Cadastrar') {
                 resetForm();
-                route.push('/helpers');
+                router.push('/helpers');
             };
 
             if (valueButton === 'Editar') {
-                route.refresh();
+                router.refresh();
+
+                const timer = setTimeout(() => {
+                    router.push('/helpers');
+                }, 3000);
+
+                return () => clearTimeout(timer);
             };
         };
 
@@ -115,7 +121,7 @@ export default function HelperFormComponent({ helper, valueButton }: HelperFormC
                 title: state.info
             });
         };
-    }, [state, valueButton, route]);
+    }, [state, valueButton, router]);
     return (
         <form
             className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm bg-white shadow rounded-lg p-2 mb-2'

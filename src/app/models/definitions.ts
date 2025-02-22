@@ -295,6 +295,12 @@ export const helperUpFormSchema = z.object({
 });
 
 export const donorUpFormSchema = z.object({
+    donorcode: z
+        .string()
+        .min(1, { message: 'Campo Obrigatório' })
+        .regex(/^\d+$/, { message: 'O Código deve conter apenas números.' })
+        .trim()
+        .optional(),
     name: z
         .string()
         .min(5, { message: 'O nome deve ter pelo menos 5 letras. ' })
@@ -312,14 +318,13 @@ export const donorUpFormSchema = z.object({
         .trim(),
     contact_other: z
         .string()
-        .min(8, { message: 'O telefone deve ter pelo menos 8 números. ' })
-        .regex(/^\d+$/, { message: 'O telefone deve conter apenas números.' })
-        .trim()
-        .nullable(),
+        .nullable()
+        .refine(value => value === null || value === '' || /^\d+$/.test(value) && value.length >= 8, {
+            message: 'O telefone deve ter pelo menos 8 números.',
+        }),
     zipcode: z
         .string()
-        .min(8, { message: 'O CEP deve ter 8 Números. ' })
-        .max(8, { message: 'O CEP deve ter 8 Números. ' })
+        .length(8, { message: 'O CEP deve ter 8 Números. ' })
         .regex(/^\d{8}$/, { message: 'O CEP deve conter apenas números.' })
         .trim(),
     street: z
@@ -340,14 +345,15 @@ export const donorUpFormSchema = z.object({
         .trim(),
     cnpj: z
         .string()
-        .min(14, { message: 'O JNPJ deve ter 14 números. ' })
-        .max(14, { message: 'O JNPJ deve ter 14 números. ' })
+        .length(14, { message: 'O JNPJ deve ter 14 números. ' })
         .regex(/^\d{14}$/, { message: 'O CNPJ deve conter apenas números.' })
-        .trim(),
+        .trim()
+        .nullable(),
     corporatename: z
         .string()
         .min(4, { message: 'Campo Obrigatório' })
-        .trim(),
+        .trim()
+        .nullable(),
     type_residence: z
         .string()
         .min(1, { message: 'Campo Obrigatório' })

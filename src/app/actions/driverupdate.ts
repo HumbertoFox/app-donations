@@ -114,7 +114,6 @@ export async function driverUpdate(state: FormStateDriverUp, formData: FormData)
                 phone
             },
             update: {
-                phone,
                 email
             },
             create: {
@@ -130,12 +129,7 @@ export async function driverUpdate(state: FormStateDriverUp, formData: FormData)
             where: {
                 zipcode
             },
-            update: {
-                zipcode,
-                city,
-                district,
-                street
-            },
+            update: {},
             create: {
                 zipcode,
                 city,

@@ -18,7 +18,7 @@ import { driverUpdate } from '@/app/actions/driverupdate';
 
 export default function DriverFormComponent({ driver, valueButton }: DriverFormComponentProps) {
     const [state, action, pending] = useActionState(valueButton === 'Editar' ? driverUpdate : driverUp, undefined);
-    const route = useRouter();
+    const router = useRouter();
     const [formData, setFormData] = useState({
         name: driver?.cnhs?.cpfs?.name ?? '',
         cpf: driver?.cnhs?.cpfs?.cpf ?? '',
@@ -103,11 +103,17 @@ export default function DriverFormComponent({ driver, valueButton }: DriverFormC
 
             if (valueButton === 'Cadastrar') {
                 resetForm();
-                route.push('/drivers');
+                router.push('/drivers');
             };
 
             if (valueButton === 'Editar') {
-                route.refresh();
+                router.refresh();
+
+                const timer = setTimeout(() => {
+                    router.push('/drivers');
+                }, 3000);
+
+                return () => clearTimeout(timer);
             };
         };
 
@@ -117,7 +123,7 @@ export default function DriverFormComponent({ driver, valueButton }: DriverFormC
                 title: state.info
             });
         };
-    }, [state, valueButton, route]);
+    }, [state, valueButton, router]);
     return (
         <form
             className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm bg-white shadow rounded-lg p-2 mb-2'

@@ -10,9 +10,11 @@ import { vehicleUp } from '@/app/actions/vehicleup';
 import { Toast } from '@/app/ts/sweetAlert';
 import { VehicleFormComponentProps } from '@/types/types';
 import { vehicleUpdate } from '@/app/actions/vehicleupdate';
+import { useRouter } from 'next/navigation';
 
 export default function VehicleFormComponent({ vehicle, valueButton }: VehicleFormComponentProps) {
     const [state, action, pending] = useActionState(valueButton === 'Editar' ? vehicleUpdate : vehicleUp, undefined);
+    const router = useRouter();
     const [formData, setFormData] = useState({
         renavam: vehicle?.renavam ?? '',
         plate: vehicle?.plate ?? '',
@@ -46,7 +48,20 @@ export default function VehicleFormComponent({ vehicle, valueButton }: VehicleFo
                 title: state.message,
             });
 
-            resetForm();
+            if (valueButton === 'Cadastrar') {
+                resetForm();
+                router.push('/vehicles');
+            };
+
+            if (valueButton === 'Editar') {
+                router.refresh();
+
+                const timer = setTimeout(() => {
+                    router.push('/vehicles');
+                }, 3000);
+
+                return () => clearTimeout(timer);
+            };
         };
 
         if (state?.info) {
@@ -55,7 +70,7 @@ export default function VehicleFormComponent({ vehicle, valueButton }: VehicleFo
                 title: state.info
             });
         };
-    }, [state]);
+    }, [state, valueButton, router]);
     return (
         <form
             className='max-w-[280px] w-full flex flex-col gap-[5px] text-sm bg-white shadow rounded-lg p-2 mb-2'

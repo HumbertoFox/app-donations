@@ -103,20 +103,23 @@ export async function donorUp(state: FormStateDonorUp, formData: FormData) {
             }
         });
 
-        const cnpjId = await Prisma.cnpjs.upsert({
-            where: {
-                cnpj,
-                corporatename
-            },
-            update: {},
-            create: {
-                cnpj,
-                corporatename
-            },
-            select: {
-                id: true
-            }
-        });
+        let cnpjId;
+        if (cnpj && corporatename) {
+            cnpjId = await Prisma.cnpjs.upsert({
+                where: {
+                    cnpj,
+                    corporatename
+                },
+                update: {},
+                create: {
+                    cnpj,
+                    corporatename
+                },
+                select: {
+                    id: true
+                }
+            });
+        };
 
         let addressId = await Prisma.addresses.findFirst({
             where: {
@@ -154,7 +157,7 @@ export async function donorUp(state: FormStateDonorUp, formData: FormData) {
             data: {
                 name,
                 phone_id: phoneId.id,
-                cnpj_id: cnpjId.id,
+                cnpj_id: cnpjId?.id,
                 address_id: addressId.id,
                 user_id
             }
@@ -187,20 +190,22 @@ export async function donorUp(state: FormStateDonorUp, formData: FormData) {
                 }
             });
 
-            const cnpjId = await Prisma.cnpjs.upsert({
-                where: {
-                    cnpj,
-                    corporatename
-                },
-                update: {},
-                create: {
-                    cnpj,
-                    corporatename
-                },
-                select: {
-                    id: true
-                }
-            });
+            let cnpjId;
+            if (cnpj && corporatename) {
+                cnpjId = await Prisma.cnpjs.upsert({
+                    where: {
+                        cnpj
+                    },
+                    update: {},
+                    create: {
+                        cnpj,
+                        corporatename
+                    },
+                    select: {
+                        id: true
+                    }
+                });
+            };
 
             let addressId = await Prisma.addresses.findFirst({
                 where: {
@@ -238,7 +243,7 @@ export async function donorUp(state: FormStateDonorUp, formData: FormData) {
                 data: {
                     name,
                     phone_id: existingPhone.id,
-                    cnpj_id: cnpjId.id,
+                    cnpj_id: cnpjId?.id,
                     address_id: addressId.id,
                     user_id
                 }

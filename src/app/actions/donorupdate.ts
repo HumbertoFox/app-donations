@@ -1,13 +1,12 @@
 'use server';
 
-import { FormStateHelperUp } from '@/types/types';
-import { helperUpFormSchema } from '@/app/models/definitions';
-import { getCheckedCpf } from '@/app/ts/cpfValidation';
-import { openSessionToken } from '@/app/models/opentoken';
 import { cookies } from 'next/headers';
+import { openSessionToken } from '@/app/models/opentoken';
+import { FormStateDonorUp } from '@/types/types';
+import { donorUpFormSchema } from '@/app/models/definitions';
 import Prisma from '@/app/models/prismadb';
 
-export async function helperUpdate(state: FormStateHelperUp, formData: FormData) {
+export async function donorUpdate(state: FormStateDonorUp, formData: FormData) {
     const sessionAuthToken = (await cookies()).get('sessionAuthToken')?.value;
 
     if (!sessionAuthToken) {
@@ -26,17 +25,19 @@ export async function helperUpdate(state: FormStateHelperUp, formData: FormData)
 
     const user_id = BigInt(payload.sub);
 
-    const validatedFields = helperUpFormSchema.safeParse({
+    const validatedFields = donorUpFormSchema.safeParse({
+        donorcode: formData.get('donorcode') as string,
         name: formData.get('name') as string,
-        cpf: formData.get('cpf') as string,
-        birthdate: formData.get('birthdate') as string,
         phone: formData.get('phone') as string,
-        email: formData.get('email') as string,
+        contact: formData.get('contact') as string,
+        contact_other: formData.get('contact_other') as string,
         zipcode: formData.get('zipcode') as string,
         street: formData.get('street') as string,
         district: formData.get('district') as string,
         city: formData.get('city') as string,
         number_residence: formData.get('number_residence') as string,
+        cnpj: formData.get('cnpj') as string,
+        corporatename: formData.get('corporatename') as string,
         type_residence: formData.get('type_residence') as string,
         building: formData.get('building') as string,
         block: formData.get('block') as string,
@@ -51,16 +52,18 @@ export async function helperUpdate(state: FormStateHelperUp, formData: FormData)
     };
 
     const {
+        donorcode,
         name,
-        cpf,
-        birthdate,
         phone,
-        email,
+        contact,
+        contact_other,
         zipcode,
         street,
         district,
         city,
         number_residence,
+        cnpj,
+        corporatename,
         type_residence,
         building,
         block,
@@ -68,45 +71,33 @@ export async function helperUpdate(state: FormStateHelperUp, formData: FormData)
         reference_point
     } = validatedFields.data;
 
-    const checkedCpf = getCheckedCpf(cpf);
-
-    if (!checkedCpf) {
-        return {
-            info: 'Números do CPF inválido!'
-        };
-    };
-
-    const cpfId = await Prisma.cpfs.findFirst({
+    const existingDonor = await Prisma.donors.findFirst({
         where: {
-            cpf,
-            name,
-            birthdate: `${birthdate}T00:00:00.000Z`
+            id: Number(donorcode)
         },
         select: {
-            id: true
+            id: true,
+            phones: {
+                select: {
+                    phone: true
+                }
+            }
         }
     });
 
-    const helperId = await Prisma.helpers.findFirst({
-        where: {
-            cpf_id: cpfId!.id
-        },
-        select: {
-            id: true
-        }
-    });
-
-    if (helperId) {
-        const phoneId = await Prisma.phones.upsert({
+    if (existingDonor) {
+        const existingPhone = await Prisma.phones.upsert({
             where: {
-                phone
+                phone: existingDonor.phones.phone
             },
             update: {
-                email
+                contact,
+                contact_other
             },
             create: {
                 phone,
-                email
+                contact,
+                contact_other
             },
             select: {
                 id: true
@@ -128,6 +119,23 @@ export async function helperUpdate(state: FormStateHelperUp, formData: FormData)
                 id: true
             }
         });
+
+        let cnpjId;
+        if (cnpj && corporatename) {
+            cnpjId = await Prisma.cnpjs.upsert({
+                where: {
+                    cnpj
+                },
+                update: {},
+                create: {
+                    cnpj,
+                    corporatename
+                },
+                select: {
+                    id: true
+                }
+            });
+        };
 
         let addressId = await Prisma.addresses.findFirst({
             where: {
@@ -161,23 +169,25 @@ export async function helperUpdate(state: FormStateHelperUp, formData: FormData)
             });
         };
 
-        await Prisma.helpers.update({
+        await Prisma.donors.update({
             where: {
-                id: helperId.id
+                id: existingDonor.id
             },
             data: {
-                phone_id: phoneId.id,
+                name,
+                phone_id: existingPhone.id,
+                cnpj_id: cnpjId?.id,
                 address_id: addressId.id,
                 user_id
             }
         });
 
         return {
-            message: 'Ajudante Editado com Sucesso!'
+            message: 'Doador Editado com Sucesso!'
         };
     } else {
         return {
-            info: 'Ajudante não encontrado!'
+            info: 'Doador não encontrado!'
         };
     };
 };
