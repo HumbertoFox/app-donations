@@ -151,7 +151,8 @@ export default function VehicleFormComponent({ vehicle, valueButton }: VehicleFo
                     {pending
                         ? `${valueButton === 'Cadastrar'
                             ? 'Cadastrando...'
-                            : 'Editando'}`
+                            : 'Editando'
+                        }`
                         : `${valueButton}`
                     }
                 </ButtonComponent>

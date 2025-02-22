@@ -9,27 +9,28 @@ import {
 import ButtonComponent from '@/components/button';
 import { checkedZipCode } from '@/app/ts/viaCep';
 import { ZipCodeError } from '@/interfaces/interfaces';
+import { DonorFormComponentProps } from '@/types/types';
 
-export default function DonorFormComponent() {
+export default function DonorFormComponent({ donor, valueButton }: DonorFormComponentProps) {
     const [state, action, pending] = useActionState(donorUp, undefined);
     const [formData, setFormData] = useState({
-        donorcode: '',
-        name: '',
-        phone: '',
-        contact: '',
-        contact_other: '',
-        zipcode: '',
-        street: '',
-        district: '',
-        city: '',
-        type_residence: 'house',
-        number_residence: '',
-        cnpj: '',
-        corporatename: '',
-        building: '',
-        block: '',
-        livingapartmentroom: '',
-        reference_point: ''
+        donorcode: donor?.id ?? '',
+        name: donor?.name ?? '',
+        phone: donor?.phones?.phone ?? '',
+        contact: donor?.phones?.contact ?? '',
+        contact_other: donor?.phones?.contact_other ?? '',
+        zipcode: donor?.addresses?.zipcodes?.zipcode ?? '',
+        street: donor?.addresses?.zipcodes?.street ?? '',
+        district: donor?.addresses?.zipcodes?.district ?? '',
+        city: donor?.addresses?.zipcodes?.city ?? '',
+        type_residence: donor?.addresses?.type_residence ?? 'house',
+        number_residence: donor?.addresses?.number_residence ?? '',
+        cnpj: donor?.cnpjs?.cnpj ?? '',
+        corporatename: donor?.cnpjs?.corporatename ?? '',
+        building: donor?.addresses?.building ?? '',
+        block: donor?.addresses?.block ?? '',
+        livingapartmentroom: donor?.addresses?.livingapartmentroom ?? '',
+        reference_point: donor?.addresses?.reference_point ?? ''
     });
     const [zipCodeErrors, setZipCodeErrors] = useState<ZipCodeError>({
         zipcode: null
@@ -67,21 +68,23 @@ export default function DonorFormComponent() {
                 </legend>
                 <div className='w-[280px]'>
                     <div className='p-1 border-2 bg-white rounded'>
-                        <div className='flex flex-col'>
-                            <label htmlFor='donorcode'>
-                                Código do Doador
-                            </label>
-                            <input
-                                className='border border-blue-300 rounded p-0.5 cursor-not-allowed'
-                                id='donorcode'
-                                name='donorcode'
-                                type='number'
-                                value={formData.donorcode}
-                                onChange={handleChange}
-                                required
-                                readOnly
-                            />
-                        </div>
+                        {valueButton === 'Editar' && (
+                            <div className='flex flex-col'>
+                                <label htmlFor='donorcode'>
+                                    Código do Doador
+                                </label>
+                                <input
+                                    className='border border-blue-300 rounded p-0.5 cursor-not-allowed'
+                                    id='donorcode'
+                                    name='donorcode'
+                                    type='number'
+                                    value={formData.donorcode}
+                                    onChange={handleChange}
+                                    required
+                                    readOnly
+                                />
+                            </div>
+                        )}
 
                         <div className='flex flex-col'>
                             <label htmlFor='name'>
@@ -464,8 +467,11 @@ export default function DonorFormComponent() {
                     disabled={pending}
                 >
                     {pending
-                        ? 'Cadastrando...'
-                        : 'Cadastrar'
+                        ? `${valueButton === 'Editar'
+                            ? 'Editando...'
+                            : 'Cadastrando...'
+                        }`
+                        : `${valueButton}`
                     }
                 </ButtonComponent>
             </div>

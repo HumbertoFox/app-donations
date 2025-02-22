@@ -443,7 +443,8 @@ export default function HelperFormComponent({ helper, valueButton }: HelperFormC
                     {pending
                         ? `${valueButton === 'Cadastrar'
                             ? 'Cadastrando...'
-                            : 'Editando'}`
+                            : 'Editando'
+                        }`
                         : `${valueButton}`
                     }
                 </ButtonComponent>

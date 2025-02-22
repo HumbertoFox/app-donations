@@ -137,7 +137,7 @@ export default function DonorsPage() {
                                         <td>{formatCep(donor.addresses.zipcodes.zipcode)}</td>
                                         <td>{donor.addresses.zipcodes.district}</td>
                                         <td className='flex justify-evenly items-center gap-2 my-1'>
-                                            <Link href={`/donor/${donor.id}/edit`}>
+                                            <Link href={`/donors/editdonor/?id=${donor.id}`}>
                                                 <Icons
                                                     icon={hoveredIcon[`${donor.id}-edit`]
                                                         ? 'fa-solid fa-user-pen'

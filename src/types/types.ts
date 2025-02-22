@@ -209,3 +209,42 @@ export type HelperFormComponentProps = {
     helper: Helper | null;
     valueButton: string;
 };
+
+export type Donor = {
+    id?: string;
+    name?: string;
+    phones?: {
+        phone?: string;
+        contact: string | null;
+        contact_other: string | null;
+    };
+    addresses?: {
+        zipcodes?: {
+            zipcode?: string;
+            street?: string;
+            district?: string;
+            city?: string;
+        };
+        number_residence?: string;
+        type_residence?: string;
+        building?: string | null;
+        block?: string | null;
+        livingapartmentroom?: string | null;
+        reference_point?: string;
+    };
+    cnpjs?: {
+        cnpj?: string;
+        corporatename?: string;
+    } | null;
+};
+
+export type DonorResponse = {
+    data?: Donor;
+    info?: string;
+    error?: string;
+};
+
+export type DonorFormComponentProps = {
+    donor: Donor | null;
+    valueButton: string;
+};

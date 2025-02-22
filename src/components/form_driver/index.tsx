@@ -430,7 +430,10 @@ export default function DriverFormComponent({ driver, valueButton }: DriverFormC
                     disabled={pending}
                 >
                     {pending
-                        ? `${valueButton === 'Editar' ? 'Editando...' : 'Cadastrando...'}`
+                        ? `${valueButton === 'Editar'
+                            ? 'Editando...'
+                            : 'Cadastrando...'
+                        }`
                         : `${valueButton}`
                     }
                 </ButtonComponent>
